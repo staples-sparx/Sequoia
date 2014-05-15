@@ -27,4 +27,13 @@ public class Node<T> {
     public int nextNodeOffset(T features) {
         return childOffsets[condition.nextOffsetIndex(feature, features)];
     }
+
+    public Node<T> copyWithEmptyChildOffsets() {
+        return new Node<T>(feature, value, isLeaf, new int[childOffsets.length], condition);
+    }
+
+    public void addChildOffset(int child) {
+        childOffsets[currentChildIndex] = child;
+        ++currentChildIndex;
+    }
 }

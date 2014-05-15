@@ -67,15 +67,29 @@ public class TreeTest {
     }
 
     @Test
-    public void testReduceToTree() {
-        HashMap<IFeature, Integer> features = new HashMap<>();
+    public void testReduceToSubTree() {
         Set<IFeature> missingFeatures = new HashSet<>();
         missingFeatures.add(Feature.DAY_OF_WEEK);
+        HashMap<IFeature, Integer> features = new HashMap<>();
+        features.put(Feature.COST, 22);
+
         Tree<HashMap<IFeature, Integer>> subTree = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(3, subTree.getNodes().length);
         assertEquals(15.0, subTree.reduceToValue(features), 0.0);
+    }
 
+    @Test
+    public void testReduceToSubTreeProducesSingleNodeIfAppropriate() {
+        Set<IFeature> missingFeatures = new HashSet<>();
+        missingFeatures.add(Feature.DAY_OF_WEEK);
+        HashMap<IFeature, Integer> features = new HashMap<>();
+        features.put(Feature.COST, 24);
+
+        Tree<HashMap<IFeature, Integer>> singleNode = tree.reduceToTree(features, missingFeatures);
+        
+        assertEquals(1, singleNode.getNodes().length);
+        assertEquals(5.0, singleNode.reduceToValue(features), 0.0);
     }
 
     private enum Feature implements IFeature {

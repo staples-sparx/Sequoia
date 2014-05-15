@@ -39,43 +39,43 @@ public class Tree<F> {
     }
 
     public Tree<F> reduceToTree(int root, F features, Set<IFeature> missingFeatures) {
-        List<Node<F>> newNodeList = new ArrayList<>();
-        TIntStack stack = new TIntArrayStack();
+        List<Node<F>> subTreeNodes = new ArrayList<>();
+        TIntStack nodesToSearchStack = new TIntArrayStack();
         TIntStack parentStack = new TIntArrayStack();
 
         Node<F> node = nodes[root];
-        while (!node.isLeaf || stack.size() != 0) {
+        while (!node.isLeaf || nodesToSearchStack.size() != 0) {
             if (node.isLeaf) {
                 int parentIndex = parentStack.pop();
-                newNodeList.get(parentIndex).addChildOffset(newNodeList.size() - parentIndex);
-                newNodeList.add(node.copyWithEmptyChildOffsets());
-                node = nodes[root + stack.pop()];
+                subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - parentIndex);
+                subTreeNodes.add(node.copyWithEmptyChildOffsets());
+                node = nodes[root + nodesToSearchStack.pop()];
             } else if (missingFeatures.contains(node.feature)) {
-                int newIndex = newNodeList.size();
+                int newIndex = subTreeNodes.size();
                 if (parentStack.size() != 0) {
                     int parentIndex = parentStack.pop();
-                    newNodeList.get(parentIndex).addChildOffset(newNodeList.size() - parentIndex);
+                    subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - parentIndex);
                 }
 
-                newNodeList.add(node.copyWithEmptyChildOffsets());
+                subTreeNodes.add(node.copyWithEmptyChildOffsets());
 
                 int[] childNodes = node.childOffsets;
                 for (int i = childNodes.length - 1; i >= 0; --i) {
                     parentStack.push(newIndex);
-                    stack.push(childNodes[i]);
+                    nodesToSearchStack.push(childNodes[i]);
                 }
                 parentStack.pop();
-                node = nodes[root + stack.pop()];
+                node = nodes[root + nodesToSearchStack.pop()];
             } else {
                 node = nodes[root + node.nextNodeOffset(features)];
             }
         }
         if (parentStack.size() != 0) {
             int parentIndex = parentStack.pop();
-            newNodeList.get(parentIndex).addChildOffset(newNodeList.size() - parentIndex);
+            subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - parentIndex);
         }
-        newNodeList.add(node);
-        return new Tree<>(newNodeList);
+        subTreeNodes.add(node);
+        return new Tree<>(subTreeNodes);
     }
 
     public Node<F>[] getNodes() {

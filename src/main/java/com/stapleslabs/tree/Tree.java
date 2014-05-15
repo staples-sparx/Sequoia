@@ -26,10 +26,8 @@ public class Tree<F> {
 
     public double reduceToValue(int root, F features) {
         Node<F> node = nodes[root];
-        int currentIndex;
         while (!node.isLeaf) {
-            currentIndex = root + node.nextNodeOffset(features);
-            node = nodes[currentIndex];
+            node = nodes[node.nextNodeOffset(features)];
         }
         return node.value;
     }
@@ -64,7 +62,7 @@ public class Tree<F> {
                     parentStack.push(newIndex);
                     nodesToSearchStack.push(childNodes[i]);
                 }
-                parentStack.pop();
+
                 node = nodes[root + nodesToSearchStack.pop()];
             } else {
                 node = nodes[root + node.nextNodeOffset(features)];

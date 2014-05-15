@@ -67,16 +67,29 @@ public class TreeTest {
     }
 
     @Test
+    public void testReduceToValueFromDifferentRoot() {
+        HashMap<IFeature, Integer> features = new HashMap<>();
+        features.put(Feature.COST, 24);
+        features.put(Feature.DAY_OF_WEEK, 0);
+
+        assertEquals(15.0, tree.reduceToValue(1, features), 0.0);
+    }
+
+    @Test
     public void testReduceToSubTree() {
         Set<IFeature> missingFeatures = new HashSet<>();
         missingFeatures.add(Feature.DAY_OF_WEEK);
         HashMap<IFeature, Integer> features = new HashMap<>();
         features.put(Feature.COST, 22);
+        features.put(Feature.DAY_OF_WEEK, 1);
 
         Tree<HashMap<IFeature, Integer>> subTree = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(3, subTree.getNodes().length);
         assertEquals(15.0, subTree.reduceToValue(features), 0.0);
+
+        features.put(Feature.DAY_OF_WEEK, 2);
+        assertEquals(5.0, subTree.reduceToValue(features), 0.0);
     }
 
     @Test
@@ -85,11 +98,19 @@ public class TreeTest {
         missingFeatures.add(Feature.DAY_OF_WEEK);
         HashMap<IFeature, Integer> features = new HashMap<>();
         features.put(Feature.COST, 24);
+        features.put(Feature.MONTH, 2);
 
-        Tree<HashMap<IFeature, Integer>> singleNode = tree.reduceToTree(features, missingFeatures);
-        
-        assertEquals(1, singleNode.getNodes().length);
-        assertEquals(5.0, singleNode.reduceToValue(features), 0.0);
+        Tree<HashMap<IFeature, Integer>> singleNodeThree = tree.reduceToTree(features, missingFeatures);
+
+        assertEquals(1, singleNodeThree.getNodes().length);
+        assertEquals(5.0, singleNodeThree.reduceToValue(features), 0.0);
+
+        features.put(Feature.MONTH, 1);
+
+        Tree<HashMap<IFeature, Integer>> singleNodeFour = tree.reduceToTree(features, missingFeatures);
+
+        assertEquals(1, singleNodeFour.getNodes().length);
+        assertEquals(10.0, singleNodeFour.reduceToValue(features), 0.0);
     }
 
     private enum Feature implements IFeature {

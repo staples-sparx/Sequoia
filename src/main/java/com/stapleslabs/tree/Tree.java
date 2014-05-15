@@ -1,6 +1,9 @@
 package com.stapleslabs.tree;
 
+import com.stapleslabs.features.IFeature;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by timbrooks on 5/14/14.
@@ -26,6 +29,14 @@ public class Tree<F> {
             node = nodes[currentIndex];
         }
         return node.value;
+    }
+
+    public Tree reduceToTree(F features, Set<IFeature> missingFeatures, List<Node<F>> newNodeList) {
+        return reduceToTree(0, features, missingFeatures, newNodeList);
+    }
+
+    public Tree reduceToTree(int root, F missingFeatures, Set<IFeature> missing, List<Node<F>> newNodeList) {
+        return null;
     }
 
 

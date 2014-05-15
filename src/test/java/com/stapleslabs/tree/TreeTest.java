@@ -62,6 +62,20 @@ public class TreeTest {
         assertEquals(5.0, tree.reduceToValue(features), 0.0);
     }
 
+    @Test
+    public void testReduceToValueWithDifferentRoot() {
+        HashMap<IFeature, Integer> features = new HashMap<>();
+        features.put(Feature.DAY_OF_WEEK, 1);
+
+        assertEquals(15.0, tree.reduceToValue(0, features), 0.0);
+        assertEquals(5.0, tree.reduceToValue(2, features), 0.0);
+    }
+
+    @Test
+    public void testReduceToTree() {
+
+    }
+
     private enum Feature implements IFeature {
         COST,
         MONTH,

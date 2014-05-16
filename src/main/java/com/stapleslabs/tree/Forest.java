@@ -55,6 +55,10 @@ public class Forest<F> {
         return new Forest<>(subForestNodes, newRoots);
     }
 
+    public Node<F>[] getNodes() {
+        return nodes;
+    }
+
     private double traverseSingleTree(int root, F features) {
         Node<F> node = nodes[root];
         int currentIndex = root;

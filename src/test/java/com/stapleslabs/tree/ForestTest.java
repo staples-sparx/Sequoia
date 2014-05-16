@@ -5,11 +5,10 @@ import com.stapleslabs.utils.TestTrees;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ForestTest {
 
@@ -45,7 +44,28 @@ public class ForestTest {
 
     @Test
     public void testReduceToForest() {
+        Set<IFeature> missingFeatures = new HashSet<>();
+        missingFeatures.add(TestTrees.Feature.CLASS_ID);
+        missingFeatures.add(TestTrees.Feature.COG);
+        missingFeatures.add(TestTrees.Feature.MONTH);
 
+        Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
+
+        Forest<Map<IFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+
+        assertTrue(forest.getNodes().length > subForest.getNodes().length);
+
+        List<Double> singleResults = new ArrayList<>();
+
+        for (Tree<Map<IFeature, Integer>> tree : trees) {
+            singleResults.add(tree.reduceToValue(features));
+        }
+
+        int counter = 0;
+        for (double d : subForest.reduceToValues(features)) {
+            assertEquals(singleResults.get(counter), d, 0.0);
+            counter++;
+        }
     }
 
 }

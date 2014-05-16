@@ -69,7 +69,7 @@ public class TestTrees {
         return featureMap;
     }
 
-    private enum Feature implements IFeature {
+    public enum Feature implements IFeature {
         COST,
         MONTH,
         DAY_OF_WEEK,

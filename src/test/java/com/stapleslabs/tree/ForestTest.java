@@ -43,4 +43,9 @@ public class ForestTest {
         }
     }
 
+    @Test
+    public void testReduceToForest() {
+
+    }
+
 }

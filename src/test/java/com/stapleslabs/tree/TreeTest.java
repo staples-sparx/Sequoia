@@ -4,49 +4,46 @@ import com.stapleslabs.features.IFeature;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class TreeTest {
 
-    private Tree<HashMap<IFeature, Integer>> tree;
+    private Tree<Map<IFeature, Integer>> tree;
 
     @Before
     public void setUp() {
         int[] childChildOffsets = {-1, -1};
 
         int[] nodeZeroChildOffsets = {1, 2};
-        Node<HashMap<IFeature, Integer>> nodeZero = new Node<>(Feature.COST, -1.0, false, nodeZeroChildOffsets, new Numeric(23));
+        Node<Map<IFeature, Integer>> nodeZero = new Node<>(Feature.COST, -1.0, false, nodeZeroChildOffsets, new Numeric(23));
 
         int[] nodeOneChildOffsets = {5, 3};
-        HashMap<Integer, Integer> dayOfWeekMappings = new HashMap<>();
+        Map<Integer, Integer> dayOfWeekMappings = new HashMap<>();
         dayOfWeekMappings.put(0, 0);
         dayOfWeekMappings.put(1, 0);
         dayOfWeekMappings.put(2, 1);
-        Node<HashMap<IFeature, Integer>> nodeOne = new Node<>(Feature.DAY_OF_WEEK, -1.0, false, nodeOneChildOffsets, new Categorical(dayOfWeekMappings));
+        Node<Map<IFeature, Integer>> nodeOne = new Node<>(Feature.DAY_OF_WEEK, -1.0, false, nodeOneChildOffsets, new Categorical(dayOfWeekMappings));
 
         int[] nodeTwoChildOffsets = {3, 4};
-        HashMap<Integer, Integer> monthMappings = new HashMap<>();
+        Map<Integer, Integer> monthMappings = new HashMap<>();
         monthMappings.put(0, 1);
         monthMappings.put(1, 1);
         monthMappings.put(2, 0);
         monthMappings.put(3, 1);
-        Node<HashMap<IFeature, Integer>> nodeTwo = new Node<>(Feature.MONTH, -1.0, false, nodeTwoChildOffsets, new Categorical(monthMappings));
+        Node<Map<IFeature, Integer>> nodeTwo = new Node<>(Feature.MONTH, -1.0, false, nodeTwoChildOffsets, new Categorical(monthMappings));
 
-        Node<HashMap<IFeature, Integer>> nodeThree = new Node<>(null, 5.0, true, childChildOffsets, null);
-        Node<HashMap<IFeature, Integer>> nodeFour = new Node<>(null, 10.0, true, childChildOffsets, null);
-        Node<HashMap<IFeature, Integer>> nodeFive = new Node<>(null, 15.0, true, childChildOffsets, null);
+        Node<Map<IFeature, Integer>> nodeThree = new Node<>(null, 5.0, true, childChildOffsets, null);
+        Node<Map<IFeature, Integer>> nodeFour = new Node<>(null, 10.0, true, childChildOffsets, null);
+        Node<Map<IFeature, Integer>> nodeFive = new Node<>(null, 15.0, true, childChildOffsets, null);
 
         tree = new Tree<>(Arrays.asList(nodeZero, nodeOne, nodeTwo, nodeThree, nodeFour, nodeFive));
     }
 
     @Test
     public void testReduceToValue() {
-        HashMap<IFeature, Integer> features = new HashMap<>();
+        Map<IFeature, Integer> features = new HashMap<>();
         assertEquals(15.0, tree.reduceToValue(features), 0.0);
 
         features.put(Feature.COST, 24);
@@ -68,7 +65,7 @@ public class TreeTest {
 
     @Test
     public void testReduceToValueFromDifferentRoot() {
-        HashMap<IFeature, Integer> features = new HashMap<>();
+        Map<IFeature, Integer> features = new HashMap<>();
         features.put(Feature.COST, 24);
         features.put(Feature.DAY_OF_WEEK, 0);
 
@@ -79,11 +76,11 @@ public class TreeTest {
     public void testReduceToSubTree() {
         Set<IFeature> missingFeatures = new HashSet<>();
         missingFeatures.add(Feature.DAY_OF_WEEK);
-        HashMap<IFeature, Integer> features = new HashMap<>();
+        Map<IFeature, Integer> features = new HashMap<>();
         features.put(Feature.COST, 22);
         features.put(Feature.DAY_OF_WEEK, 1);
 
-        Tree<HashMap<IFeature, Integer>> subTree = tree.reduceToTree(features, missingFeatures);
+        Tree<Map<IFeature, Integer>> subTree = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(3, subTree.getNodes().length);
         assertEquals(15.0, subTree.reduceToValue(features), 0.0);
@@ -96,18 +93,18 @@ public class TreeTest {
     public void testReduceToSubTreeProducesSingleNodeIfAppropriate() {
         Set<IFeature> missingFeatures = new HashSet<>();
         missingFeatures.add(Feature.DAY_OF_WEEK);
-        HashMap<IFeature, Integer> features = new HashMap<>();
+        Map<IFeature, Integer> features = new HashMap<>();
         features.put(Feature.COST, 24);
         features.put(Feature.MONTH, 2);
 
-        Tree<HashMap<IFeature, Integer>> singleNodeThree = tree.reduceToTree(features, missingFeatures);
+        Tree<Map<IFeature, Integer>> singleNodeThree = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(1, singleNodeThree.getNodes().length);
         assertEquals(5.0, singleNodeThree.reduceToValue(features), 0.0);
 
         features.put(Feature.MONTH, 1);
 
-        Tree<HashMap<IFeature, Integer>> singleNodeFour = tree.reduceToTree(features, missingFeatures);
+        Tree<Map<IFeature, Integer>> singleNodeFour = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(1, singleNodeFour.getNodes().length);
         assertEquals(10.0, singleNodeFour.reduceToValue(features), 0.0);
@@ -119,16 +116,16 @@ public class TreeTest {
         DAY_OF_WEEK
     }
 
-    private static class Categorical implements ICondition<HashMap<IFeature, Integer>> {
+    private static class Categorical implements ICondition<Map<IFeature, Integer>> {
 
-        private final HashMap<Integer, Integer> conditions;
+        private final Map<Integer, Integer> conditions;
 
-        public Categorical(HashMap<Integer, Integer> conditions) {
+        public Categorical(Map<Integer, Integer> conditions) {
             this.conditions = conditions;
         }
 
         @Override
-        public int nextOffsetIndex(final IFeature feature, final HashMap<IFeature, Integer> features) {
+        public int nextOffsetIndex(final IFeature feature, final Map<IFeature, Integer> features) {
             Integer featureValue = features.get(feature);
             if (featureValue == null) {
                 return 0;
@@ -137,7 +134,7 @@ public class TreeTest {
         }
     }
 
-    private static class Numeric implements ICondition<HashMap<IFeature, Integer>> {
+    private static class Numeric implements ICondition<Map<IFeature, Integer>> {
 
         private final int cutPoint;
 
@@ -146,7 +143,7 @@ public class TreeTest {
         }
 
         @Override
-        public int nextOffsetIndex(final IFeature feature, final HashMap<IFeature, Integer> features) {
+        public int nextOffsetIndex(final IFeature feature, final Map<IFeature, Integer> features) {
             Integer value = features.get(feature);
             if (value == null) {
                 return 0;

@@ -31,7 +31,7 @@ public class Forest<F> {
     @SuppressWarnings("unchecked")
     private Forest(List<Node<F>> nodes, int[] roots) {
         this.reducer = new TreeReducer<>();
-        this.nodes = nodes.toArray(new Node[nodes.size()]);;
+        this.nodes = nodes.toArray(new Node[nodes.size()]);
         this.roots = roots;
     }
 
@@ -61,10 +61,8 @@ public class Forest<F> {
 
     private double traverseSingleTree(int root, F features) {
         Node<F> node = nodes[root];
-        int currentIndex = root;
         while (!node.isLeaf) {
-            currentIndex = currentIndex + node.nextNodeOffset(features);
-            node = nodes[currentIndex];
+            node = nodes[root + node.nextNodeOffset(features)];
         }
         return node.value;
     }

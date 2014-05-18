@@ -16,19 +16,20 @@ public class TreeReducer<F> {
                                     List<Node<F>> subTreeNodes) {
         TIntStack nodesToSearchStack = new TIntArrayStack();
         TIntStack parentStack = new TIntArrayStack();
+        int newRoot = subTreeNodes.size();
 
         Node<F> node = nodes[root];
         while (!node.isLeaf || nodesToSearchStack.size() != 0) {
             if (node.isLeaf) {
                 int parentIndex = parentStack.pop();
-                subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - parentIndex);
+                subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - newRoot);
                 subTreeNodes.add(node.copyWithEmptyChildOffsets());
                 node = nodes[root + nodesToSearchStack.pop()];
             } else if (missingFeatures.contains(node.feature)) {
                 int newIndex = subTreeNodes.size();
                 if (parentStack.size() != 0) {
                     int parentIndex = parentStack.pop();
-                    subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - parentIndex);
+                    subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - newRoot);
                 }
 
                 subTreeNodes.add(node.copyWithEmptyChildOffsets());
@@ -46,7 +47,7 @@ public class TreeReducer<F> {
         }
         if (parentStack.size() != 0) {
             int parentIndex = parentStack.pop();
-            subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - parentIndex);
+            subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - newRoot);
         }
         subTreeNodes.add(node);
     }

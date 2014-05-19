@@ -35,8 +35,14 @@ public class TestTrees {
         Random random = new Random();
 
         List<Node<Map<IFeature, Integer>>> nodes = new ArrayList<>();
+        for (int i = 0; i < 1; i++) {
+            NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
+            int[] childOffsets = {random.nextInt(3) + 1, random.nextInt(3) + 1, random.nextInt(3) + 1};
+            Node<Map<IFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false, childOffsets, nodeBlueprint.getCondition());
+            nodes.add(node);
+        }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 1; i < 4; i++) {
             NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
             int[] childOffsets = {random.nextInt(8) + 4, random.nextInt(8) + 4, random.nextInt(8) + 4};
             Node<Map<IFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false, childOffsets, nodeBlueprint.getCondition());

@@ -8,7 +8,6 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ForestTest {
 
@@ -52,8 +51,6 @@ public class ForestTest {
         Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
 
         Forest<Map<IFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
-
-        assertTrue(forest.getNodes().length > subForest.getNodes().length);
 
         List<Double> singleResults = new ArrayList<>();
 

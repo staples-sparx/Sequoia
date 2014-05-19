@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ForestTest {
 
@@ -42,7 +43,7 @@ public class ForestTest {
     }
 
     @Test
-    public void testReduceToForest() {
+    public void testReduceToForestWithMissingFeatures() {
         Set<IFeature> missingFeatures = new HashSet<>();
         missingFeatures.add(TestTrees.Feature.CLASS_ID);
         missingFeatures.add(TestTrees.Feature.COG);
@@ -51,6 +52,44 @@ public class ForestTest {
         Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
 
         Forest<Map<IFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+
+        assertAccurateResults(subForest);
+    }
+
+    @Test
+    public void testReduceToForestWithoutMissingFeatures() {
+        Set<IFeature> missingFeatures = new HashSet<>();
+
+        Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
+
+        Forest<Map<IFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+
+        assertTrue(subForest.getNodes().length == trees.size());
+
+        assertAccurateResults(subForest);
+    }
+
+    @Test
+    public void testReduceToForestWithAllFeaturesMissing() {
+        Set<IFeature> missingFeatures = new HashSet<>();
+        missingFeatures.add(TestTrees.Feature.CLASS_ID);
+        missingFeatures.add(TestTrees.Feature.COG);
+        missingFeatures.add(TestTrees.Feature.MONTH);
+        missingFeatures.add(TestTrees.Feature.DAY_OF_WEEK);
+        missingFeatures.add(TestTrees.Feature.COST);
+        missingFeatures.add(TestTrees.Feature.DISTANCE);
+
+        Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
+
+        Forest<Map<IFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+
+        assertTrue(subForest.getNodes().length >= forest.getNodes().length);
+
+
+        assertAccurateResults(subForest);
+    }
+
+    private void assertAccurateResults(final Forest<Map<IFeature, Integer>> subForest) {
 
         List<Double> singleResults = new ArrayList<>();
 

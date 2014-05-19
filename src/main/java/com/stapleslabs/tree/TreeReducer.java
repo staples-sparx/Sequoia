@@ -29,7 +29,7 @@ public class TreeReducer<F> {
                 int newIndex = subTreeNodes.size();
                 if (parentStack.size() != 0) {
                     int parentIndex = parentStack.pop();
-                    subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - newRoot);
+                    subTreeNodes.get(parentIndex).addChildOffset(newIndex - newRoot);
                 }
 
                 subTreeNodes.add(node.copyWithEmptyChildOffsets());
@@ -49,6 +49,6 @@ public class TreeReducer<F> {
             int parentIndex = parentStack.pop();
             subTreeNodes.get(parentIndex).addChildOffset(subTreeNodes.size() - newRoot);
         }
-        subTreeNodes.add(node);
+        subTreeNodes.add(node.copyWithEmptyChildOffsets());
     }
 }

@@ -10,14 +10,14 @@ import java.util.Set;
 /**
  * Created by timbrooks on 5/14/14.
  */
-public class Forest<F> {
+public class Forest {
 
-    private final Node<F>[] nodes;
+    private final Node[] nodes;
     private final int[] roots;
     private final TreeReducer reducer;
 
     @SuppressWarnings("unchecked")
-    public Forest(List<Tree<F>> trees) {
+    public Forest(List<Tree> trees) {
         final int[] roots = new int[trees.size()];
         List<Node> forestNodes = new ArrayList<>();
 
@@ -29,13 +29,13 @@ public class Forest<F> {
     }
 
     @SuppressWarnings("unchecked")
-    private Forest(List<Node<F>> nodes, int[] roots) {
+    private Forest(List<Node> nodes, int[] roots) {
         this.reducer = new TreeReducer();
         this.nodes = nodes.toArray(new Node[nodes.size()]);
         this.roots = roots;
     }
 
-    public double[] reduceToValues(F features) {
+    public <F> double[] reduceToValues(F features) {
         double[] values = new double[roots.length];
         for (int i = 0; i < roots.length; i++) {
             values[i] = traverseSingleTree(roots[i], features);
@@ -43,8 +43,8 @@ public class Forest<F> {
         return values;
     }
 
-    public Forest<F> reduceToForest(F features, Set<IFeature> missingFeatures) {
-        List<Node<F>> subForestNodes = new ArrayList<>();
+    public <F> Forest reduceToForest(F features, Set<IFeature> missingFeatures) {
+        List<Node> subForestNodes = new ArrayList<>();
         int[] newRoots = new int[roots.length];
 
         for (int i = 0; i < roots.length; ++i) {
@@ -52,25 +52,25 @@ public class Forest<F> {
             reducer.reduceTree(roots[i], nodes, features, missingFeatures, subForestNodes);
         }
 
-        return new Forest<>(subForestNodes, newRoots);
+        return new Forest(subForestNodes, newRoots);
     }
 
-    public Node<F>[] getNodes() {
+    public Node[] getNodes() {
         return nodes;
     }
 
-    private double traverseSingleTree(int root, F features) {
-        Node<F> node = nodes[root];
+    private <F> double traverseSingleTree(int root, F features) {
+        Node node = nodes[root];
         while (!node.isLeaf) {
             node = nodes[root + node.nextNodeOffset(features)];
         }
         return node.value;
     }
 
-    private void initializeRootsAndNodes(final List<Tree<F>> trees, final int[] roots, final List<Node> forestNodes) {
+    private void initializeRootsAndNodes(final List<Tree> trees, final int[] roots, final List<Node> forestNodes) {
         int rootIndex = 0;
         for (int i = 0; i < trees.size(); i++) {
-            Tree<F> tree = trees.get(i);
+            Tree tree = trees.get(i);
             Node[] nodes = tree.getNodes();
             roots[i] = rootIndex;
             rootIndex = rootIndex + nodes.length;

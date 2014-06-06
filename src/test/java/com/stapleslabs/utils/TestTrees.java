@@ -31,28 +31,28 @@ public class TestTrees {
         branchNodeRecipes.put(5, new NodeBlueprint(Feature.CLASS_ID, new Categorical(categoricalMap)));
     }
 
-    public Tree<Map<IFeature, Integer>> getRandomTree() {
+    public Tree getRandomTree() {
         Random random = new Random();
 
-        List<Node<Map<IFeature, Integer>>> nodes = new ArrayList<>();
+        List<Node> nodes = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
             NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
             int[] childOffsets = {random.nextInt(3) + 1, random.nextInt(3) + 1, random.nextInt(3) + 1};
-            Node<Map<IFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false, childOffsets, nodeBlueprint.getCondition());
+            Node node = new Node(nodeBlueprint.getFeature(), -1.0, false, childOffsets, nodeBlueprint.getCondition());
             nodes.add(node);
         }
 
         for (int i = 1; i < 4; i++) {
             NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
             int[] childOffsets = {random.nextInt(8) + 4, random.nextInt(8) + 4, random.nextInt(8) + 4};
-            Node<Map<IFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false, childOffsets, nodeBlueprint.getCondition());
+            Node node = new Node(nodeBlueprint.getFeature(), -1.0, false, childOffsets, nodeBlueprint.getCondition());
             nodes.add(node);
         }
         for (int i = 0; i < 8; i++) {
             int[] childOffsets = {};
-            nodes.add(new Node<Map<IFeature, Integer>>(null, random.nextInt(100), true, childOffsets, null));
+            nodes.add(new Node(null, random.nextInt(100), true, childOffsets, null));
         }
-        return new Tree<>(nodes);
+        return new Tree(nodes);
     }
 
     public Map<IFeature, Integer> getRandomFeatures() {

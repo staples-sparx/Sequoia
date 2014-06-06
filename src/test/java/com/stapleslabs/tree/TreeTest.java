@@ -10,21 +10,21 @@ import static org.junit.Assert.assertEquals;
 
 public class TreeTest {
 
-    private Tree<Map<IFeature, Integer>> tree;
+    private Tree tree;
 
     @Before
     public void setUp() {
         int[] childChildOffsets = {-1, -1};
 
         int[] nodeZeroChildOffsets = {1, 2};
-        Node<Map<IFeature, Integer>> nodeZero = new Node<>(Feature.COST, -1.0, false, nodeZeroChildOffsets, new Numeric(23));
+        Node nodeZero = new Node(Feature.COST, -1.0, false, nodeZeroChildOffsets, new Numeric(23));
 
         int[] nodeOneChildOffsets = {5, 3};
         Map<Integer, Integer> dayOfWeekMappings = new HashMap<>();
         dayOfWeekMappings.put(0, 0);
         dayOfWeekMappings.put(1, 0);
         dayOfWeekMappings.put(2, 1);
-        Node<Map<IFeature, Integer>> nodeOne = new Node<>(Feature.DAY_OF_WEEK, -1.0, false, nodeOneChildOffsets, new Categorical(dayOfWeekMappings));
+        Node nodeOne = new Node(Feature.DAY_OF_WEEK, -1.0, false, nodeOneChildOffsets, new Categorical(dayOfWeekMappings));
 
         int[] nodeTwoChildOffsets = {3, 4};
         Map<Integer, Integer> monthMappings = new HashMap<>();
@@ -32,13 +32,13 @@ public class TreeTest {
         monthMappings.put(1, 1);
         monthMappings.put(2, 0);
         monthMappings.put(3, 1);
-        Node<Map<IFeature, Integer>> nodeTwo = new Node<>(Feature.MONTH, -1.0, false, nodeTwoChildOffsets, new Categorical(monthMappings));
+        Node nodeTwo = new Node(Feature.MONTH, -1.0, false, nodeTwoChildOffsets, new Categorical(monthMappings));
 
-        Node<Map<IFeature, Integer>> nodeThree = new Node<>(null, 5.0, true, childChildOffsets, null);
-        Node<Map<IFeature, Integer>> nodeFour = new Node<>(null, 10.0, true, childChildOffsets, null);
-        Node<Map<IFeature, Integer>> nodeFive = new Node<>(null, 15.0, true, childChildOffsets, null);
+        Node nodeThree = new Node(null, 5.0, true, childChildOffsets, null);
+        Node nodeFour = new Node(null, 10.0, true, childChildOffsets, null);
+        Node nodeFive = new Node(null, 15.0, true, childChildOffsets, null);
 
-        tree = new Tree<>(Arrays.asList(nodeZero, nodeOne, nodeTwo, nodeThree, nodeFour, nodeFive));
+        tree = new Tree(Arrays.asList(nodeZero, nodeOne, nodeTwo, nodeThree, nodeFour, nodeFive));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class TreeTest {
         features.put(Feature.COST, 22);
         features.put(Feature.DAY_OF_WEEK, 1);
 
-        Tree<Map<IFeature, Integer>> subTree = tree.reduceToTree(features, missingFeatures);
+        Tree subTree = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(3, subTree.getNodes().length);
         assertEquals(15.0, subTree.reduceToValue(features), 0.0);
@@ -97,14 +97,14 @@ public class TreeTest {
         features.put(Feature.COST, 24);
         features.put(Feature.MONTH, 2);
 
-        Tree<Map<IFeature, Integer>> singleNodeThree = tree.reduceToTree(features, missingFeatures);
+        Tree singleNodeThree = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(1, singleNodeThree.getNodes().length);
         assertEquals(5.0, singleNodeThree.reduceToValue(features), 0.0);
 
         features.put(Feature.MONTH, 1);
 
-        Tree<Map<IFeature, Integer>> singleNodeFour = tree.reduceToTree(features, missingFeatures);
+        Tree singleNodeFour = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(1, singleNodeFour.getNodes().length);
         assertEquals(10.0, singleNodeFour.reduceToValue(features), 0.0);
@@ -153,6 +153,7 @@ public class TreeTest {
                 return 0;
             }
         }
+
     }
 
 }

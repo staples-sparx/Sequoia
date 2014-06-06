@@ -5,17 +5,17 @@ import com.stapleslabs.features.IFeature;
 /**
  * Created by timbrooks on 5/14/14.
  */
-public class Node<T> {
+public class Node<F> {
 
 
         public final IFeature feature;
         public final double value;
         public final boolean isLeaf;
         public final int[] childOffsets;
-        private final ICondition<T> condition;
+        private final ICondition<F> condition;
         private int currentChildIndex;
 
-        public Node(IFeature feature, double value, boolean isLeaf, int[] childOffsets, ICondition<T> condition) {
+        public Node(IFeature feature, double value, boolean isLeaf, int[] childOffsets, ICondition<F> condition) {
             this.feature = feature;
             this.value = value;
             this.isLeaf = isLeaf;
@@ -24,12 +24,12 @@ public class Node<T> {
             this.currentChildIndex = 0;
         }
 
-    public int nextNodeOffset(T features) {
+    public int nextNodeOffset(F features) {
         return childOffsets[condition.nextOffsetIndex(feature, features)];
     }
 
-    public Node<T> copyWithEmptyChildOffsets() {
-        return new Node<T>(feature, value, isLeaf, new int[childOffsets.length], condition);
+    public Node<F> copyWithEmptyChildOffsets() {
+        return new Node<>(feature, value, isLeaf, new int[childOffsets.length], condition);
     }
 
     public void addChildOffset(int child) {

@@ -12,13 +12,13 @@ import java.util.Set;
  */
 public class TreeReducer {
 
-    public <F> void reduceTree(int root, Node[] nodes, F features, Set<IFeature> missingFeatures,
-                                    List<Node> subTreeNodes) {
+    public <F> void reduceTree(int root, Node<F>[] nodes, F features, Set<IFeature> missingFeatures,
+                                    List<Node<F>> subTreeNodes) {
         TIntStack nodesToSearchStack = new TIntArrayStack();
         TIntStack parentStack = new TIntArrayStack();
         int newRoot = subTreeNodes.size();
 
-        Node node = nodes[root];
+        Node<F> node = nodes[root];
         while (!node.isLeaf || nodesToSearchStack.size() != 0) {
             if (node.isLeaf) {
                 int parentIndex = parentStack.pop();

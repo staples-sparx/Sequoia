@@ -10,9 +10,9 @@ import java.util.Set;
 /**
  * Created by timbrooks on 5/15/14.
  */
-public class TreeReducer<F> {
+public class TreeReducer {
 
-    public void reduceTree(int root, Node<F>[] nodes, F features, Set<IFeature> missingFeatures,
+    public <F> void reduceTree(int root, Node<F>[] nodes, F features, Set<IFeature> missingFeatures,
                                     List<Node<F>> subTreeNodes) {
         TIntStack nodesToSearchStack = new TIntArrayStack();
         TIntStack parentStack = new TIntArrayStack();

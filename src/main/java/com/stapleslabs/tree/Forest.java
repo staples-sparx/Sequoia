@@ -14,7 +14,7 @@ public class Forest<F> {
 
     private final Node<F>[] nodes;
     private final int[] roots;
-    private final TreeReducer<F> reducer;
+    private final TreeReducer reducer;
 
     @SuppressWarnings("unchecked")
     public Forest(List<Tree<F>> trees) {
@@ -23,14 +23,14 @@ public class Forest<F> {
 
         initializeRootsAndNodes(trees, roots, forestNodes);
 
-        this.reducer = new TreeReducer<>();
+        this.reducer = new TreeReducer();
         this.nodes = forestNodes.toArray(new Node[forestNodes.size()]);
         this.roots = roots;
     }
 
     @SuppressWarnings("unchecked")
     private Forest(List<Node<F>> nodes, int[] roots) {
-        this.reducer = new TreeReducer<>();
+        this.reducer = new TreeReducer();
         this.nodes = nodes.toArray(new Node[nodes.size()]);
         this.roots = roots;
     }

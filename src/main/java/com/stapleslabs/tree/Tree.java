@@ -12,11 +12,11 @@ import java.util.Set;
 public class Tree<F> {
 
     private final Node<F>[] nodes;
-    private final TreeReducer<F> reducer;
+    private final TreeReducer reducer;
 
     @SuppressWarnings("unchecked")
     public Tree(List<Node<F>> nodes) {
-        this.reducer = new TreeReducer<>();
+        this.reducer = new TreeReducer();
         this.nodes = nodes.toArray(new Node[nodes.size()]);
     }
 

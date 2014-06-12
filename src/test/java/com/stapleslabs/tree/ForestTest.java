@@ -18,7 +18,7 @@ public class ForestTest {
     @Before
     public void setUp() {
         TestTrees treeGenerator = new TestTrees();
-        for (int i = 0; i < 30; i ++) {
+        for (int i = 0; i < 30; i++) {
             trees.add(treeGenerator.getRandomTree());
         }
         features = treeGenerator.getRandomFeatures();
@@ -53,7 +53,7 @@ public class ForestTest {
 
         Forest<Map<IFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
 
-        assertAccurateResults(subForest);
+        assertAccurateResults(subForest.reduceToValues(features));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class ForestTest {
 
         assertTrue(subForest.getNodes().length == trees.size());
 
-        assertAccurateResults(subForest);
+        assertAccurateResults(subForest.reduceToValues(features));
     }
 
     @Test
@@ -86,10 +86,32 @@ public class ForestTest {
         assertTrue(subForest.getNodes().length >= forest.getNodes().length);
 
 
-        assertAccurateResults(subForest);
+        assertAccurateResults(subForest.reduceToValues(features));
     }
 
-    private void assertAccurateResults(final Forest<Map<IFeature, Integer>> subForest) {
+    @Test
+    public void testOptimizedReduceToValuesProducesExpectedResults() {
+
+        for (int i = 0; i < 1000; ++i) {
+
+            Set<IFeature> differingFeatures = new HashSet<>();
+            differingFeatures.add(TestTrees.Feature.CLASS_ID);
+            differingFeatures.add(TestTrees.Feature.COG);
+            differingFeatures.add(TestTrees.Feature.MONTH);
+
+            Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
+
+            double[][] results = forest.optimizedReduceToValues(Arrays.asList(features), differingFeatures);
+
+            for (double[] result : results) {
+                assertAccurateResults(result);
+            }
+        }
+
+
+    }
+
+    private void assertAccurateResults(double[] results) {
 
         List<Double> singleResults = new ArrayList<>();
 
@@ -98,7 +120,7 @@ public class ForestTest {
         }
 
         int counter = 0;
-        for (double d : subForest.reduceToValues(features)) {
+        for (double d : results) {
             assertEquals(singleResults.get(counter), d, 0.0);
             counter++;
         }

@@ -37,11 +37,13 @@ public class Tree<F> {
     }
 
     public double[] optimizedReduceToValue(List<F> features, Set<IFeature> differingFeatures) {
-        int[][] fastPath = reducer.getFastPath(0, nodes, features.get(0), differingFeatures);
+        Path path = new Path();
+        reducer.getFastPath(0, nodes, features.get(0), differingFeatures, path);
+        int[][] fastPath = path.fastPath;
         double[] results = new double[features.size()];
 
         for (int i = 0; i < features.size(); ++i) {
-            int currentIndex = 0;
+            int currentIndex = path.root;
             Node<F> node = nodes[currentIndex];
             while (!node.isLeaf) {
 
@@ -55,10 +57,7 @@ public class Tree<F> {
                 node = nodes[currentIndex];
             }
             results[i] = node.value;
-
         }
-
-
         return results;
     }
 

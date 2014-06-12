@@ -53,23 +53,34 @@ public class TreeReducer {
         subTreeNodes.add(node.copyWithEmptyChildOffsets());
     }
 
-    public <F> int[][] getFastPath(int root, Node<F>[] nodes, F features, Set<IFeature> missingFeatures) {
-        int[][] path = new int[nodes.length][];
-        int[] offsetState = new int[nodes.length];
+    public <F> void getFastPath(int root, Node<F>[] nodes, F features, Set<IFeature> missingFeatures, Path path) {
         TIntStack nodesToSearchStack = new TIntArrayStack();
         TIntStack parentStack = new TIntArrayStack();
+        int[][] fastPath = new int[nodes.length][];
+        path.setFastPath(fastPath);
+        int[] offsetState = new int[nodes.length];
 
         int currentIndex = root;
         Node<F> node = nodes[root];
         while (!node.isLeaf || nodesToSearchStack.size() != 0) {
             if (node.isLeaf) {
-                modifyPath(path, offsetState, parentStack, currentIndex);
+                int parentIndex = parentStack.pop();
+                int offsetIndex = offsetState[parentIndex];
+                ++offsetState[parentIndex];
+                int[] childOffsets = fastPath[parentIndex];
+                childOffsets[offsetIndex] = currentIndex - childOffsets[offsetIndex];
 
                 currentIndex = root + nodesToSearchStack.pop();
                 node = nodes[currentIndex];
             } else if (missingFeatures.contains(node.feature)) {
                 if (parentStack.size() != 0) {
-                    modifyPath(path, offsetState, parentStack, currentIndex);
+                    int parentIndex = parentStack.pop();
+                    int offsetIndex = offsetState[parentIndex];
+                    ++offsetState[parentIndex];
+                    int[] childOffsets = fastPath[parentIndex];
+                    childOffsets[offsetIndex] = currentIndex - childOffsets[offsetIndex];
+                } else {
+                    path.setRoot(currentIndex);
                 }
 
                 int[] childNodeOffsets = node.childOffsets;
@@ -77,28 +88,25 @@ public class TreeReducer {
                     parentStack.push(currentIndex);
                     nodesToSearchStack.push(childNodeOffsets[i]);
                 }
-                path[currentIndex] = Arrays.copyOf(childNodeOffsets, childNodeOffsets.length);
+                offsetState[currentIndex] = 0;
+                fastPath[currentIndex] = Arrays.copyOf(childNodeOffsets, childNodeOffsets.length);
 
                 currentIndex = root + nodesToSearchStack.pop();
                 node = nodes[currentIndex];
-            }
-            else {
+            } else {
                 currentIndex = root + node.nextNodeOffset(features);
                 node = nodes[currentIndex];
             }
         }
         if (parentStack.size() != 0) {
-            modifyPath(path, offsetState, parentStack, currentIndex);
+            int parentIndex = parentStack.pop();
+            int offsetIndex = offsetState[parentIndex];
+            ++offsetState[parentIndex];
+            int[] childOffsets = fastPath[parentIndex];
+            childOffsets[offsetIndex] = currentIndex - childOffsets[offsetIndex];
+        } else {
+            path.setRoot(currentIndex);
         }
-
-        return path;
     }
 
-    private void modifyPath(final int[][] path, final int[] offsetState, final TIntStack parentStack, final int currentIndex) {
-        int parentIndex = parentStack.pop();
-        int offsetIndex = offsetState[parentIndex];
-        ++offsetState[parentIndex];
-        int[] childOffsets = path[parentIndex];
-        childOffsets[offsetIndex] = currentIndex - childOffsets[offsetIndex];
-    }
 }

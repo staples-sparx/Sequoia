@@ -38,11 +38,12 @@ public class TreeReducerTest {
         HashSet<IFeature> missingFeatures = new HashSet<>();
         missingFeatures.add(Feature.MISSING);
 
-        int[][] fastPath = treeReducer.getFastPath(0, tree.getNodes(), features, missingFeatures);
+        Path path = new Path();
+        treeReducer.getFastPath(0, tree.getNodes(), features, missingFeatures, path);
 
-        System.out.println(Arrays.toString(fastPath));
         int[][] expectedFastPath = {null, null, {2, 0}, null, null, null};
-        assertArrayEquals(expectedFastPath, fastPath);
+        assertArrayEquals(expectedFastPath, path.fastPath);
+        assertEquals(2, path.root);
     }
 
     private enum Feature implements IFeature {

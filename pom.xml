@@ -6,7 +6,7 @@
 
     <groupId>com.stapleslabs</groupId>
     <artifactId>shallowthought</artifactId>
-    <version>0.9</version>
+    <version>0.13</version>
 
     <dependencies>
         <dependency>

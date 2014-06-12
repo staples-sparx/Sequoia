@@ -55,8 +55,52 @@ public class Forest<F> {
         return new Forest<>(subForestNodes, newRoots);
     }
 
+    public double[][] optimizedReduceToValues(List<F> features, Set<IFeature> differingFeatures) {
+        double[][] results = new double[features.size()][];
+        Path[] paths = new Path[roots.length];
+
+        F firstFeatureMap = features.get(0);
+        for (int i = 0; i < roots.length; ++i) {
+            Path path = new Path();
+            reducer.getFastPath(roots[i], nodes, firstFeatureMap, differingFeatures, path);
+            paths[i] = path;
+        }
+
+
+        for (int i = 0; i < features.size(); ++i) {
+            results[i] = optimizedTraverseForest(features.get(i), paths);
+        }
+
+
+        return results;
+    }
+
     public Node<F>[] getNodes() {
         return nodes;
+    }
+
+    private double[] optimizedTraverseForest(F features, Path[] paths) {
+        double [] results = new double[paths.length];
+        for (int i = 0; i < paths.length; ++i) {
+            Path path = paths[i];
+            int[][] fastPath = path.fastPath;
+            int currentIndex = path.root;
+            Node<F> node = nodes[currentIndex];
+            while (!node.isLeaf) {
+
+                int[] fastPathOffsets = fastPath[currentIndex];
+                if (fastPathOffsets != null) {
+                    currentIndex = node.nextNodeOffset(features, fastPathOffsets);
+                } else {
+                    currentIndex = node.nextNodeOffset(features);
+
+                }
+                node = nodes[currentIndex];
+            }
+            results[i] = node.value;
+        }
+        return  results;
+
     }
 
     private double traverseSingleTree(int root, F features) {

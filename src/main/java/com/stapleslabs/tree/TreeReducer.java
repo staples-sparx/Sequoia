@@ -4,6 +4,7 @@ import com.stapleslabs.features.IFeature;
 import gnu.trove.stack.TIntStack;
 import gnu.trove.stack.array.TIntArrayStack;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -76,7 +77,7 @@ public class TreeReducer {
                     parentStack.push(currentIndex);
                     nodesToSearchStack.push(childNodeOffsets[i]);
                 }
-                path[currentIndex] = childNodeOffsets;
+                path[currentIndex] = Arrays.copyOf(childNodeOffsets, childNodeOffsets.length);
 
                 currentIndex = root + nodesToSearchStack.pop();
                 node = nodes[currentIndex];

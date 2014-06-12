@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.*;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class TreeTest {
@@ -64,15 +65,6 @@ public class TreeTest {
     }
 
     @Test
-    public void testReduceToValueFromDifferentRoot() {
-        Map<IFeature, Integer> features = new HashMap<>();
-        features.put(Feature.COST, 24);
-        features.put(Feature.DAY_OF_WEEK, 0);
-
-        assertEquals(15.0, tree.reduceToValue(1, features), 0.0);
-    }
-
-    @Test
     public void testReduceToSubTree() {
         Set<IFeature> missingFeatures = new HashSet<>();
         missingFeatures.add(Feature.DAY_OF_WEEK);
@@ -108,6 +100,52 @@ public class TreeTest {
 
         assertEquals(1, singleNodeFour.getNodes().length);
         assertEquals(10.0, singleNodeFour.reduceToValue(features), 0.0);
+    }
+
+    @Test
+    public void testOptimizedReduceToValueWithNoFeaturesDiffering() {
+        HashSet<IFeature> differingFeatures = new HashSet<>();
+
+        Map<IFeature, Integer> features = new HashMap<>();
+
+        Map<IFeature, Integer> features1 = new HashMap<>();
+        features1.put(Feature.COST, 24);
+
+        Map<IFeature, Integer> features2 = new HashMap<>(features1);
+        features2.put(Feature.MONTH, 2);
+
+        Map<IFeature, Integer> features3 = new HashMap<>(features2);
+        features3.put(Feature.MONTH, 1);
+
+        Map<IFeature, Integer> features4 = new HashMap<>(features3);
+        features4.put(Feature.COST, 22);
+        features4.put(Feature.DAY_OF_WEEK, 1);
+
+        Map<IFeature, Integer> features5 = new HashMap<>(features4);
+        features5.put(Feature.DAY_OF_WEEK, 2);
+
+        List<Map<IFeature, Integer>> featureList = Arrays.asList(features, features1, features2, features3, features4, features5);
+
+        double[] expected = {15.0, 5.0, 5.0, 10.0, 15.0, 5.0};
+        assertArrayEquals(expected, tree.optimizedReduceToValue(featureList, differingFeatures), 0.0);
+    }
+
+    @Test
+    public void testOptimizedReduceToValueWithFeatureDiffering() {
+        Set<IFeature> differingFeatures = new HashSet<>();
+        differingFeatures.add(Feature.DAY_OF_WEEK);
+        Map<IFeature, Integer> features1 = new HashMap<>();
+        features1.put(Feature.COST, 22);
+        features1.put(Feature.DAY_OF_WEEK, 1);
+
+        Map<IFeature, Integer> features2 = new HashMap<>(features1);
+        features2.put(Feature.DAY_OF_WEEK, 2);
+
+        List<Map<IFeature, Integer>> featureList = Arrays.asList(features1, features2);
+
+
+        double[] expected = {15.0, 5.0};
+        assertArrayEquals(expected, tree.optimizedReduceToValue(featureList, differingFeatures), 0.0);
     }
 
     private enum Feature implements IFeature {

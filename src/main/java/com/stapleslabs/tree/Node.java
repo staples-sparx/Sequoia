@@ -28,6 +28,11 @@ public class Node<F> {
         return childOffsets[condition.nextOffsetIndex(feature, features)];
     }
 
+    public int nextNodeOffset(final F features, final int[] fastPathOffsets) {
+        int index = condition.nextOffsetIndex(feature, features);
+        return childOffsets[index] + fastPathOffsets[index];
+    }
+
     public Node<F> copyWithEmptyChildOffsets() {
         return new Node<>(feature, value, isLeaf, new int[childOffsets.length], condition);
     }

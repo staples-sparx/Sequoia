@@ -20,12 +20,9 @@ public class Tree<F> {
         this.nodes = nodes.toArray(new Node[nodes.size()]);
     }
 
-    public double reduceToValue(F features) {
-        return reduceToValue(0, features);
-    }
 
-    public double reduceToValue(int root, F features) {
-        Node<F> node = nodes[root];
+    public double reduceToValue(F features) {
+        Node<F> node = nodes[0];
         while (!node.isLeaf) {
             node = nodes[node.nextNodeOffset(features)];
         }
@@ -33,14 +30,36 @@ public class Tree<F> {
     }
 
     public Tree<F> reduceToTree(F features, Set<IFeature> missingFeatures) {
-        return reduceToTree(0, features, missingFeatures);
-    }
-
-    public Tree<F> reduceToTree(int root, F features, Set<IFeature> missingFeatures) {
         List<Node<F>> subTreeNodes = new ArrayList<>();
 
-        reducer.reduceTree(root, nodes, features, missingFeatures, subTreeNodes);
+        reducer.reduceTree(0, nodes, features, missingFeatures, subTreeNodes);
         return new Tree<>(subTreeNodes);
+    }
+
+    public double[] optimizedReduceToValue(List<F> features, Set<IFeature> differingFeatures) {
+        int[][] fastPath = reducer.getFastPath(0, nodes, features.get(0), differingFeatures);
+        double[] results = new double[features.size()];
+
+        for (int i = 0; i < features.size(); ++i) {
+            int currentIndex = 0;
+            Node<F> node = nodes[currentIndex];
+            while (!node.isLeaf) {
+
+                int[] fastPathOffsets = fastPath[currentIndex];
+                if (fastPathOffsets != null) {
+                    currentIndex = node.nextNodeOffset(features.get(i), fastPathOffsets);
+                } else {
+                    currentIndex = node.nextNodeOffset(features.get(i));
+
+                }
+                node = nodes[currentIndex];
+            }
+            results[i] = node.value;
+
+        }
+
+
+        return results;
     }
 
     public Node<F>[] getNodes() {

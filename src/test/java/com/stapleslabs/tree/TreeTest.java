@@ -1,6 +1,5 @@
 package com.stapleslabs.tree;
 
-import com.stapleslabs.features.IFeature;
 import org.junit.Before;
 import org.junit.Test;
 

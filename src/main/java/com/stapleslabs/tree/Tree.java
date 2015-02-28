@@ -1,7 +1,5 @@
 package com.stapleslabs.tree;
 
-import com.stapleslabs.features.IFeature;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

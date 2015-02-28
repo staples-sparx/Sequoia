@@ -1,6 +1,5 @@
 package com.stapleslabs.tree;
 
-import com.stapleslabs.features.IFeature;
 import gnu.trove.stack.TIntStack;
 import gnu.trove.stack.array.TIntArrayStack;
 

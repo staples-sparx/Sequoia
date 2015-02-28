@@ -1,7 +1,5 @@
 package com.stapleslabs.tree;
 
-import com.stapleslabs.features.IFeature;
-import com.stapleslabs.utils.TestFeature;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -9,7 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 
 /**

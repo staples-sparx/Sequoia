@@ -10,14 +10,14 @@ import java.util.Set;
 /**
  * Created by timbrooks on 5/14/14.
  */
-public class Forest<F> {
+public class Forest<F, C> {
 
-    private final Node<F>[] nodes;
+    private final Node<F, C>[] nodes;
     private final int[] roots;
     private final TreeReducer reducer;
 
     @SuppressWarnings("unchecked")
-    public Forest(List<Tree<F>> trees) {
+    public Forest(List<Tree<F, C>> trees) {
         final int[] roots = new int[trees.size()];
         List<Node> forestNodes = new ArrayList<>();
 
@@ -29,13 +29,13 @@ public class Forest<F> {
     }
 
     @SuppressWarnings("unchecked")
-    private Forest(List<Node<F>> nodes, int[] roots) {
+    private Forest(List<Node<F, C>> nodes, int[] roots) {
         this.reducer = new TreeReducer();
         this.nodes = nodes.toArray(new Node[nodes.size()]);
         this.roots = roots;
     }
 
-    public double[] reduceToValues(F features) {
+    public double[] reduceToValues(C features) {
         double[] values = new double[roots.length];
         for (int i = 0; i < roots.length; i++) {
             values[i] = traverseSingleTree(roots[i], features);
@@ -43,8 +43,8 @@ public class Forest<F> {
         return values;
     }
 
-    public Forest<F> reduceToForest(F features, Set<IFeature> missingFeatures) {
-        List<Node<F>> subForestNodes = new ArrayList<>();
+    public Forest<F, C> reduceToForest(C features, Set<F> missingFeatures) {
+        List<Node<F, C>> subForestNodes = new ArrayList<>();
         int[] newRoots = new int[roots.length];
 
         for (int i = 0; i < roots.length; ++i) {
@@ -55,11 +55,11 @@ public class Forest<F> {
         return new Forest<>(subForestNodes, newRoots);
     }
 
-    public double[][] optimizedReduceToValues(List<F> features, Set<IFeature> differingFeatures) {
+    public double[][] optimizedReduceToValues(List<C> features, Set<F> differingFeatures) {
         double[][] results = new double[features.size()][];
         Path[] paths = new Path[roots.length];
 
-        F firstFeatureMap = features.get(0);
+        C firstFeatureMap = features.get(0);
         for (int i = 0; i < roots.length; ++i) {
             Path path = new Path();
             reducer.getFastPath(roots[i], nodes, firstFeatureMap, differingFeatures, path);
@@ -75,17 +75,17 @@ public class Forest<F> {
         return results;
     }
 
-    public Node<F>[] getNodes() {
+    public Node<F, C>[] getNodes() {
         return nodes;
     }
 
-    private double[] optimizedTraverseForest(F features, Path[] paths) {
-        double [] results = new double[paths.length];
+    private double[] optimizedTraverseForest(C features, Path[] paths) {
+        double[] results = new double[paths.length];
         for (int i = 0; i < paths.length; ++i) {
             Path path = paths[i];
             int[][] fastPath = path.fastPath;
             int currentIndex = path.root;
-            Node<F> node = nodes[currentIndex];
+            Node<F, C> node = nodes[currentIndex];
             while (!node.isLeaf) {
 
                 int[] fastPathOffsets = fastPath[currentIndex];
@@ -99,22 +99,22 @@ public class Forest<F> {
             }
             results[i] = node.value;
         }
-        return  results;
+        return results;
 
     }
 
-    private double traverseSingleTree(int root, F features) {
-        Node<F> node = nodes[root];
+    private double traverseSingleTree(int root, C features) {
+        Node<F, C> node = nodes[root];
         while (!node.isLeaf) {
             node = nodes[root + node.nextNodeOffset(features)];
         }
         return node.value;
     }
 
-    private void initializeRootsAndNodes(final List<Tree<F>> trees, final int[] roots, final List<Node> forestNodes) {
+    private void initializeRootsAndNodes(final List<Tree<F, C>> trees, final int[] roots, final List<Node> forestNodes) {
         int rootIndex = 0;
         for (int i = 0; i < trees.size(); i++) {
-            Tree<F> tree = trees.get(i);
+            Tree<F, C> tree = trees.get(i);
             Node[] nodes = tree.getNodes();
             roots[i] = rootIndex;
             rootIndex = rootIndex + nodes.length;

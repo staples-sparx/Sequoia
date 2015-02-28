@@ -1,21 +1,19 @@
 package com.stapleslabs.tree;
 
-import com.stapleslabs.features.IFeature;
-
 /**
  * Created by timbrooks on 5/14/14.
  */
-public class Node<F> {
+public class Node<F, C> {
 
 
-        public final IFeature feature;
+        public final F feature;
         public final double value;
         public final boolean isLeaf;
         public final int[] childOffsets;
-        private final ICondition<F> condition;
+        private final ICondition<F, C> condition;
         private int currentChildIndex;
 
-        public Node(IFeature feature, double value, boolean isLeaf, int[] childOffsets, ICondition<F> condition) {
+        public Node(F feature, double value, boolean isLeaf, int[] childOffsets, ICondition<F, C> condition) {
             this.feature = feature;
             this.value = value;
             this.isLeaf = isLeaf;
@@ -24,16 +22,16 @@ public class Node<F> {
             this.currentChildIndex = 0;
         }
 
-    public int nextNodeOffset(F features) {
+    public int nextNodeOffset(C features) {
         return childOffsets[condition.nextOffsetIndex(feature, features)];
     }
 
-    public int nextNodeOffset(final F features, final int[] fastPathOffsets) {
+    public int nextNodeOffset(final C features, final int[] fastPathOffsets) {
         int index = condition.nextOffsetIndex(feature, features);
         return childOffsets[index] + fastPathOffsets[index];
     }
 
-    public Node<F> copyWithEmptyChildOffsets() {
+    public Node<F, C> copyWithEmptyChildOffsets() {
         return new Node<>(feature, value, isLeaf, new int[childOffsets.length], condition);
     }
 

@@ -1,6 +1,7 @@
 package com.stapleslabs.tree;
 
 import com.stapleslabs.features.IFeature;
+import com.stapleslabs.utils.TestFeature;
 import com.stapleslabs.utils.TestTrees;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 
 public class ForestTest {
 
-    private final List<Tree<Map<IFeature, Integer>>> trees = new ArrayList<>();
-    private Map<IFeature, Integer> features;
+    private final List<Tree<TestFeature, Map<TestFeature, Integer>>> trees = new ArrayList<>();
+    private Map<TestFeature, Integer> features;
 
     @Before
     public void setUp() {
@@ -29,11 +30,11 @@ public class ForestTest {
     public void testReduceToValuesProducesSameValuesAsTrees() {
         List<Double> singleResults = new ArrayList<>();
 
-        for (Tree<Map<IFeature, Integer>> tree : trees) {
+        for (Tree<TestFeature, Map<TestFeature, Integer>> tree : trees) {
             singleResults.add(tree.reduceToValue(features));
         }
 
-        Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
+        Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
 
         int counter = 0;
         for (double d : forest.reduceToValues(features)) {
@@ -44,25 +45,25 @@ public class ForestTest {
 
     @Test
     public void testReduceToForestWithMissingFeatures() {
-        Set<IFeature> missingFeatures = new HashSet<>();
-        missingFeatures.add(TestTrees.Feature.CLASS_ID);
-        missingFeatures.add(TestTrees.Feature.COG);
-        missingFeatures.add(TestTrees.Feature.MONTH);
+        Set<TestFeature> missingFeatures = new HashSet<>();
+        missingFeatures.add(TestFeature.CLASS_ID);
+        missingFeatures.add(TestFeature.COG);
+        missingFeatures.add(TestFeature.MONTH);
 
-        Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
+        Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
 
-        Forest<Map<IFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+        Forest<TestFeature, Map<TestFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
 
         assertAccurateResults(subForest.reduceToValues(features));
     }
 
     @Test
     public void testReduceToForestWithoutMissingFeatures() {
-        Set<IFeature> missingFeatures = new HashSet<>();
+        Set<TestFeature> missingFeatures = new HashSet<>();
 
-        Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
+        Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
 
-        Forest<Map<IFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+        Forest<TestFeature, Map<TestFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
 
         assertTrue(subForest.getNodes().length == trees.size());
 
@@ -71,17 +72,17 @@ public class ForestTest {
 
     @Test
     public void testReduceToForestWithAllFeaturesMissing() {
-        Set<IFeature> missingFeatures = new HashSet<>();
-        missingFeatures.add(TestTrees.Feature.CLASS_ID);
-        missingFeatures.add(TestTrees.Feature.COG);
-        missingFeatures.add(TestTrees.Feature.MONTH);
-        missingFeatures.add(TestTrees.Feature.DAY_OF_WEEK);
-        missingFeatures.add(TestTrees.Feature.COST);
-        missingFeatures.add(TestTrees.Feature.DISTANCE);
+        Set<TestFeature> missingFeatures = new HashSet<>();
+        missingFeatures.add(TestFeature.CLASS_ID);
+        missingFeatures.add(TestFeature.COG);
+        missingFeatures.add(TestFeature.MONTH);
+        missingFeatures.add(TestFeature.DAY_OF_WEEK);
+        missingFeatures.add(TestFeature.COST);
+        missingFeatures.add(TestFeature.DISTANCE);
 
-        Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
+        Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
 
-        Forest<Map<IFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+        Forest<TestFeature, Map<TestFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
 
         assertTrue(subForest.getNodes().length >= forest.getNodes().length);
 
@@ -94,12 +95,12 @@ public class ForestTest {
 
         for (int i = 0; i < 1000; ++i) {
 
-            Set<IFeature> differingFeatures = new HashSet<>();
-            differingFeatures.add(TestTrees.Feature.CLASS_ID);
-            differingFeatures.add(TestTrees.Feature.COG);
-            differingFeatures.add(TestTrees.Feature.MONTH);
+            Set<TestFeature> differingFeatures = new HashSet<>();
+            differingFeatures.add(TestFeature.CLASS_ID);
+            differingFeatures.add(TestFeature.COG);
+            differingFeatures.add(TestFeature.MONTH);
 
-            Forest<Map<IFeature, Integer>> forest = new Forest<>(trees);
+            Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
 
             double[][] results = forest.optimizedReduceToValues(Arrays.asList(features), differingFeatures);
 
@@ -115,7 +116,7 @@ public class ForestTest {
 
         List<Double> singleResults = new ArrayList<>();
 
-        for (Tree<Map<IFeature, Integer>> tree : trees) {
+        for (Tree<TestFeature, Map<TestFeature, Integer>> tree : trees) {
             singleResults.add(tree.reduceToValue(features));
         }
 

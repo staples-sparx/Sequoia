@@ -9,34 +9,34 @@ import java.util.Set;
 /**
  * Created by timbrooks on 5/14/14.
  */
-public class Tree<F> {
+public class Tree<F, C> {
 
-    private final Node<F>[] nodes;
+    private final Node<F, C>[] nodes;
     private final TreeReducer reducer;
 
     @SuppressWarnings("unchecked")
-    public Tree(List<Node<F>> nodes) {
+    public Tree(List<Node<F, C>> nodes) {
         this.reducer = new TreeReducer();
         this.nodes = nodes.toArray(new Node[nodes.size()]);
     }
 
 
-    public double reduceToValue(F features) {
-        Node<F> node = nodes[0];
+    public double reduceToValue(C features) {
+        Node<F, C> node = nodes[0];
         while (!node.isLeaf) {
             node = nodes[node.nextNodeOffset(features)];
         }
         return node.value;
     }
 
-    public Tree<F> reduceToTree(F features, Set<IFeature> missingFeatures) {
-        List<Node<F>> subTreeNodes = new ArrayList<>();
+    public Tree<F, C> reduceToTree(C features, Set<F> missingFeatures) {
+        List<Node<F, C>> subTreeNodes = new ArrayList<>();
 
         reducer.reduceTree(0, nodes, features, missingFeatures, subTreeNodes);
         return new Tree<>(subTreeNodes);
     }
 
-    public double[] optimizedReduceToValue(List<F> features, Set<IFeature> differingFeatures) {
+    public double[] optimizedReduceToValue(List<C> features, Set<F> differingFeatures) {
         Path path = new Path();
         reducer.getFastPath(0, nodes, features.get(0), differingFeatures, path);
         int[][] fastPath = path.fastPath;
@@ -44,7 +44,7 @@ public class Tree<F> {
 
         for (int i = 0; i < features.size(); ++i) {
             int currentIndex = path.root;
-            Node<F> node = nodes[currentIndex];
+            Node<F, C> node = nodes[currentIndex];
             while (!node.isLeaf) {
 
                 int[] fastPathOffsets = fastPath[currentIndex];
@@ -61,7 +61,7 @@ public class Tree<F> {
         return results;
     }
 
-    public Node<F>[] getNodes() {
+    public Node<F, C>[] getNodes() {
         return nodes;
     }
 

@@ -1,6 +1,5 @@
 package com.stapleslabs.utils;
 
-import com.stapleslabs.features.IFeature;
 import com.stapleslabs.tree.ICondition;
 import com.stapleslabs.tree.Node;
 import com.stapleslabs.tree.Tree;
@@ -15,7 +14,7 @@ public class TestTrees {
     private static final HashMap<Integer, NodeBlueprint> branchNodeRecipes;
 
     static {
-        HashMap<Integer, Integer> categoricalMap = new HashMap<>();
+        Map<Integer, Integer> categoricalMap = new HashMap<>();
         categoricalMap.put(0, 1);
         categoricalMap.put(1, 2);
         categoricalMap.put(2, 1);
@@ -23,51 +22,53 @@ public class TestTrees {
         categoricalMap.put(4, 1);
 
         branchNodeRecipes = new HashMap<>();
-        branchNodeRecipes.put(0, new NodeBlueprint(Feature.COST, new Numeric(5)));
-        branchNodeRecipes.put(1, new NodeBlueprint(Feature.MONTH, new Categorical(categoricalMap)));
-        branchNodeRecipes.put(2, new NodeBlueprint(Feature.DAY_OF_WEEK, new Categorical(categoricalMap)));
-        branchNodeRecipes.put(3, new NodeBlueprint(Feature.COG, new Numeric(5)));
-        branchNodeRecipes.put(4, new NodeBlueprint(Feature.DISTANCE, new Numeric(5)));
-        branchNodeRecipes.put(5, new NodeBlueprint(Feature.CLASS_ID, new Categorical(categoricalMap)));
+        branchNodeRecipes.put(0, new NodeBlueprint(TestFeature.COST, new Numeric(5)));
+        branchNodeRecipes.put(1, new NodeBlueprint(TestFeature.MONTH, new Categorical(categoricalMap)));
+        branchNodeRecipes.put(2, new NodeBlueprint(TestFeature.DAY_OF_WEEK, new Categorical(categoricalMap)));
+        branchNodeRecipes.put(3, new NodeBlueprint(TestFeature.COG, new Numeric(5)));
+        branchNodeRecipes.put(4, new NodeBlueprint(TestFeature.DISTANCE, new Numeric(5)));
+        branchNodeRecipes.put(5, new NodeBlueprint(TestFeature.CLASS_ID, new Categorical(categoricalMap)));
     }
 
-    public Tree<Map<IFeature, Integer>> getRandomTree() {
+    public Tree<TestFeature, Map<TestFeature, Integer>> getRandomTree() {
         Random random = new Random();
 
-        List<Node<Map<IFeature, Integer>>> nodes = new ArrayList<>();
+        List<Node<TestFeature, Map<TestFeature, Integer>>> nodes = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
             NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
             int[] childOffsets = {random.nextInt(3) + 1, random.nextInt(3) + 1, random.nextInt(3) + 1};
-            Node<Map<IFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false, childOffsets, nodeBlueprint.getCondition());
+            Node<TestFeature, Map<TestFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false,
+                    childOffsets, nodeBlueprint.getCondition());
             nodes.add(node);
         }
 
         for (int i = 1; i < 4; i++) {
             NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
             int[] childOffsets = {random.nextInt(8) + 4, random.nextInt(8) + 4, random.nextInt(8) + 4};
-            Node<Map<IFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false, childOffsets, nodeBlueprint.getCondition());
+            Node<TestFeature, Map<TestFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false,
+                    childOffsets, nodeBlueprint.getCondition());
             nodes.add(node);
         }
         for (int i = 0; i < 8; i++) {
             int[] childOffsets = {};
-            nodes.add(new Node<Map<IFeature, Integer>>(null, random.nextInt(100), true, childOffsets, null));
+            nodes.add(new Node<TestFeature, Map<TestFeature, Integer>>(null, random.nextInt(100), true, childOffsets, null));
         }
         return new Tree<>(nodes);
     }
 
-    public Map<IFeature, Integer> getRandomFeatures() {
+    public Map<TestFeature, Integer> getRandomFeatures() {
         Random random = new Random();
-        HashMap<IFeature, Integer> featureMap = new HashMap<>();
+        Map<TestFeature, Integer> featureMap = new HashMap<>();
 
-        IFeature[] numericFeatures = {Feature.COST, Feature.COG, Feature.DISTANCE};
-        for (IFeature numericFeature : numericFeatures) {
+        TestFeature[] numericFeatures = {TestFeature.COST, TestFeature.COG, TestFeature.DISTANCE};
+        for (TestFeature numericFeature : numericFeatures) {
             if (random.nextInt(10) > 1) {
                 featureMap.put(numericFeature, random.nextInt(10));
             }
         }
 
-        IFeature[] categoricalFeatures = {Feature.DAY_OF_WEEK, Feature.MONTH, Feature.CLASS_ID};
-        for (IFeature categoricalFeature : categoricalFeatures) {
+        TestFeature[] categoricalFeatures = {TestFeature.DAY_OF_WEEK, TestFeature.MONTH, TestFeature.CLASS_ID};
+        for (TestFeature categoricalFeature : categoricalFeatures) {
             if (random.nextInt(10) > 1) {
                 featureMap.put(categoricalFeature, random.nextInt(5));
             }
@@ -75,16 +76,7 @@ public class TestTrees {
         return featureMap;
     }
 
-    public enum Feature implements IFeature {
-        COST,
-        MONTH,
-        DAY_OF_WEEK,
-        COG,
-        DISTANCE,
-        CLASS_ID
-    }
-
-    private static class Categorical implements ICondition<Map<IFeature, Integer>> {
+    private static class Categorical implements ICondition<TestFeature, Map<TestFeature, Integer>> {
 
         private final Map<Integer, Integer> conditions;
 
@@ -93,7 +85,7 @@ public class TestTrees {
         }
 
         @Override
-        public int nextOffsetIndex(final IFeature feature, final Map<IFeature, Integer> features) {
+        public int nextOffsetIndex(final TestFeature feature, final Map<TestFeature, Integer> features) {
             Integer featureValue = features.get(feature);
             if (featureValue == null) {
                 return 0;
@@ -102,7 +94,7 @@ public class TestTrees {
         }
     }
 
-    private static class Numeric implements ICondition<Map<IFeature, Integer>> {
+    private static class Numeric implements ICondition<TestFeature, Map<TestFeature, Integer>> {
 
         private final int cutPoint;
 
@@ -111,7 +103,7 @@ public class TestTrees {
         }
 
         @Override
-        public int nextOffsetIndex(final IFeature feature, final Map<IFeature, Integer> features) {
+        public int nextOffsetIndex(final TestFeature feature, final Map<TestFeature, Integer> features) {
             Integer value = features.get(feature);
             if (value == null) {
                 return 0;

@@ -1,6 +1,5 @@
 package com.stapleslabs.utils;
 
-import com.stapleslabs.features.IFeature;
 import com.stapleslabs.tree.ICondition;
 
 import java.util.Map;
@@ -10,19 +9,19 @@ import java.util.Map;
  */
 public class NodeBlueprint {
 
-    private final IFeature feature;
-    private final ICondition<Map<IFeature, Integer>> condition;
+    private final TestFeature feature;
+    private final ICondition<TestFeature, Map<TestFeature, Integer>> condition;
 
-    public NodeBlueprint(IFeature feature, ICondition<Map<IFeature, Integer>> condition) {
+    public NodeBlueprint(TestFeature feature, ICondition<TestFeature, Map<TestFeature, Integer>> condition) {
         this.feature = feature;
         this.condition = condition;
     }
 
-    public IFeature getFeature() {
+    public TestFeature getFeature() {
         return feature;
     }
 
-    public ICondition<Map<IFeature, Integer>> getCondition() {
+    public ICondition<TestFeature, Map<TestFeature, Integer>> getCondition() {
         return condition;
     }
 }

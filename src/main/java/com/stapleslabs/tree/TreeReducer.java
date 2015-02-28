@@ -13,13 +13,13 @@ import java.util.Set;
  */
 public class TreeReducer {
 
-    public <F> void reduceTree(int root, Node<F>[] nodes, F features, Set<IFeature> missingFeatures,
-                               List<Node<F>> subTreeNodes) {
+    public <F, C> void reduceTree(int root, Node<F, C>[] nodes, C features, Set<F> missingFeatures,
+                                  List<Node<F, C>> subTreeNodes) {
         TIntStack nodesToSearchStack = new TIntArrayStack();
         TIntStack parentStack = new TIntArrayStack();
         int newRoot = subTreeNodes.size();
 
-        Node<F> node = nodes[root];
+        Node<F, C> node = nodes[root];
         while (!node.isLeaf || nodesToSearchStack.size() != 0) {
             if (node.isLeaf) {
                 int parentIndex = parentStack.pop();
@@ -53,7 +53,7 @@ public class TreeReducer {
         subTreeNodes.add(node.copyWithEmptyChildOffsets());
     }
 
-    public <F> void getFastPath(int root, Node<F>[] nodes, F features, Set<IFeature> missingFeatures, Path path) {
+    public <F, C> void getFastPath(int root, Node<F, C>[] nodes, C features, Set<F> missingFeatures, Path path) {
         TIntStack nodesToSearchStack = new TIntArrayStack();
         TIntStack parentStack = new TIntArrayStack();
         int[][] fastPath = new int[nodes.length][];
@@ -61,7 +61,7 @@ public class TreeReducer {
         int[] offsetState = new int[nodes.length];
 
         int currentIndex = root;
-        Node<F> node = nodes[root];
+        Node<F, C> node = nodes[root];
         while (!node.isLeaf || nodesToSearchStack.size() != 0) {
             if (node.isLeaf) {
                 int parentIndex = parentStack.pop();

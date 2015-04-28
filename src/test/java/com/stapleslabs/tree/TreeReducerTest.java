@@ -30,7 +30,6 @@ public class TreeReducerTest {
 
 
         Tree<Feature, Map<Feature, Integer>> tree = new Tree<>(Arrays.asList(node0, node1, node2, node3, node4, node5));
-        TreeReducer treeReducer = new TreeReducer();
 
         HashMap<Feature, Integer> features = new HashMap<>();
         features.put(Feature.COST, 10);
@@ -39,7 +38,7 @@ public class TreeReducerTest {
         missingFeatures.add(Feature.MISSING);
 
         Path path = new Path();
-        treeReducer.getFastPath(0, tree.getNodes(), features, missingFeatures, path);
+        TreeReducer.getFastPath(0, tree.getNodes(), features, missingFeatures, path);
 
         int[][] expectedFastPath = {null, null, {2, 0}, null, null, null};
         assertArrayEquals(expectedFastPath, path.fastPath);

@@ -12,8 +12,8 @@ import java.util.Set;
  */
 public class TreeReducer {
 
-    public <F, C> void reduceTree(int root, Node<F, C>[] nodes, C features, Set<F> missingFeatures,
-                                  List<Node<F, C>> subTreeNodes) {
+    public static <F, C> void reduceTree(int root, Node<F, C>[] nodes, C features, Set<F> missingFeatures,
+                                         List<Node<F, C>> subTreeNodes) {
         IntStack nodesToSearchStack = new IntArrayList();
         IntStack parentStack = new IntArrayList();
         int newRoot = subTreeNodes.size();
@@ -52,7 +52,7 @@ public class TreeReducer {
         subTreeNodes.add(node.copyWithEmptyChildOffsets());
     }
 
-    public <F, C> void getFastPath(int root, Node<F, C>[] nodes, C features, Set<F> missingFeatures, Path path) {
+    public static <F, C> void getFastPath(int root, Node<F, C>[] nodes, C features, Set<F> missingFeatures, Path path) {
         IntStack nodesToSearchStack = new IntArrayList();
         IntStack parentStack = new IntArrayList();
         int[][] fastPath = new int[nodes.length][];

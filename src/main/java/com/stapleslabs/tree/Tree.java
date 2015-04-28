@@ -10,11 +10,9 @@ import java.util.Set;
 public class Tree<F, C> {
 
     private final Node<F, C>[] nodes;
-    private final TreeReducer reducer;
 
     @SuppressWarnings("unchecked")
     public Tree(List<Node<F, C>> nodes) {
-        this.reducer = new TreeReducer();
         this.nodes = nodes.toArray(new Node[nodes.size()]);
     }
 
@@ -30,13 +28,13 @@ public class Tree<F, C> {
     public Tree<F, C> reduceToTree(C features, Set<F> missingFeatures) {
         List<Node<F, C>> subTreeNodes = new ArrayList<>();
 
-        reducer.reduceTree(0, nodes, features, missingFeatures, subTreeNodes);
+        TreeReducer.reduceTree(0, nodes, features, missingFeatures, subTreeNodes);
         return new Tree<>(subTreeNodes);
     }
 
     public double[] optimizedReduceToValue(List<C> features, Set<F> differingFeatures) {
         Path path = new Path();
-        reducer.getFastPath(0, nodes, features.get(0), differingFeatures, path);
+        TreeReducer.getFastPath(0, nodes, features.get(0), differingFeatures, path);
         int[][] fastPath = path.fastPath;
         double[] results = new double[features.size()];
 

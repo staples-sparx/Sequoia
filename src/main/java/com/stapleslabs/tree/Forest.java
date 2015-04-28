@@ -12,7 +12,6 @@ public class Forest<F, C> {
 
     private final Node<F, C>[] nodes;
     private final int[] roots;
-    private final TreeReducer reducer;
 
     @SuppressWarnings("unchecked")
     public Forest(List<Tree<F, C>> trees) {
@@ -21,14 +20,12 @@ public class Forest<F, C> {
 
         initializeRootsAndNodes(trees, roots, forestNodes);
 
-        this.reducer = new TreeReducer();
         this.nodes = forestNodes.toArray(new Node[forestNodes.size()]);
         this.roots = roots;
     }
 
     @SuppressWarnings("unchecked")
     private Forest(List<Node<F, C>> nodes, int[] roots) {
-        this.reducer = new TreeReducer();
         this.nodes = nodes.toArray(new Node[nodes.size()]);
         this.roots = roots;
     }
@@ -47,7 +44,7 @@ public class Forest<F, C> {
 
         for (int i = 0; i < roots.length; ++i) {
             newRoots[i] = subForestNodes.size();
-            reducer.reduceTree(roots[i], nodes, features, missingFeatures, subForestNodes);
+            TreeReducer.reduceTree(roots[i], nodes, features, missingFeatures, subForestNodes);
         }
 
         return new Forest<>(subForestNodes, newRoots);
@@ -60,7 +57,7 @@ public class Forest<F, C> {
         C firstFeatureMap = features.get(0);
         for (int i = 0; i < roots.length; ++i) {
             Path path = new Path();
-            reducer.getFastPath(roots[i], nodes, firstFeatureMap, differingFeatures, path);
+            TreeReducer.getFastPath(roots[i], nodes, firstFeatureMap, differingFeatures, path);
             paths[i] = path;
         }
 

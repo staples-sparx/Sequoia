@@ -5,7 +5,6 @@ package com.stapleslabs.tree;
  */
 public class Node<F, C> {
 
-
         public final F feature;
         public final double value;
         public final boolean isLeaf;

@@ -70,6 +70,10 @@ public class Forest<F, C> {
         return results;
     }
 
+    public int[] getRoots() {
+        return roots;
+    }
+
     public Node<F, C>[] getNodes() {
         return nodes;
     }

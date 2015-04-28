@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by timbrooks on 5/15/14.
  */
-public class TreeReducer {
+public final class TreeReducer {
 
     public static <F, C> void reduceTree(int root, Node<F, C>[] nodes, C features, Set<F> missingFeatures,
                                          List<Node<F, C>> subTreeNodes) {

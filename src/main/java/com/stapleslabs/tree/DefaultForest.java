@@ -8,25 +8,18 @@ import java.util.Set;
 /**
  * Created by timbrooks on 5/14/14.
  */
-public class ForestImpl<F, C> implements Forest<F,C> {
+public class DefaultForest<F, C> implements Forest<F,C> {
 
     private final Node<F, C>[] nodes;
     private final int[] roots;
 
     @SuppressWarnings("unchecked")
-    public ForestImpl(List<Tree<F, C>> trees) {
-        final int[] roots = new int[trees.size()];
-        List<Node> forestNodes = new ArrayList<>();
-
-        initializeRootsAndNodes(trees, roots, forestNodes);
-
-        this.nodes = forestNodes.toArray(new Node[forestNodes.size()]);
-        this.roots = roots;
+    private DefaultForest(List<Node<F, C>> nodes, int[] roots) {
+        this(nodes.toArray(new Node[nodes.size()]), roots);
     }
 
-    @SuppressWarnings("unchecked")
-    private ForestImpl(List<Node<F, C>> nodes, int[] roots) {
-        this.nodes = nodes.toArray(new Node[nodes.size()]);
+    public DefaultForest(Node<F, C>[] nodes, int[] roots) {
+        this.nodes = nodes;
         this.roots = roots;
     }
 
@@ -49,7 +42,7 @@ public class ForestImpl<F, C> implements Forest<F,C> {
             TreeReducer.reduceTree(roots[i], nodes, features, missingFeatures, subForestNodes);
         }
 
-        return new ForestImpl<>(subForestNodes, newRoots);
+        return new DefaultForest<>(subForestNodes, newRoots);
     }
 
     @Override
@@ -113,17 +106,5 @@ public class ForestImpl<F, C> implements Forest<F,C> {
             node = nodes[root + node.nextNodeOffset(features)];
         }
         return node.value;
-    }
-
-    private void initializeRootsAndNodes(final List<Tree<F, C>> trees, final int[] roots, final List<Node> forestNodes) {
-        int rootIndex = 0;
-        for (int i = 0; i < trees.size(); i++) {
-            Tree<F, C> tree = trees.get(i);
-            Node[] nodes = tree.getNodes();
-            roots[i] = rootIndex;
-            rootIndex = rootIndex + nodes.length;
-
-            Collections.addAll(forestNodes, nodes);
-        }
     }
 }

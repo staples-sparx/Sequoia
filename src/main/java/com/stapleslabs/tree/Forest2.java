@@ -56,7 +56,7 @@ public class Forest2 implements Forest<Integer, double[]> {
         int maxChildren = 2;
 
         int nodeSize =  2 + 4 + 8 + (maxChildren * 4) + 8;
-        ByteBuffer newForest = ByteBuffer.allocate(nodeSize * nodes.length);
+        ByteBuffer newForest = ByteBuffer.allocateDirect(nodeSize * nodes.length);
 
         int[] roots = forest.getRoots();
         int i = 0;

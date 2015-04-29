@@ -12,17 +12,15 @@ public class Forest1 implements Forest<Integer, double[]> {
     private final double[] values;
     private final boolean[] leafIndicators;
     private final int[] offsets;
-    private final double[] cutPoints;
     private final int[] roots;
     private final SpecializedCondition condition;
 
-    public Forest1(int[] features, double[] values, boolean[] leafIndicators, int[] offsets, double[] cutPoints,
-                   int[] roots, SpecializedCondition condition) {
+    public Forest1(int[] features, double[] values, boolean[] leafIndicators, int[] offsets, int[] roots,
+                   SpecializedCondition condition) {
         this.features = features;
         this.values = values;
         this.leafIndicators = leafIndicators;
         this.offsets = offsets;
-        this.cutPoints = cutPoints;
         this.roots = roots;
         this.condition = condition;
     }
@@ -55,7 +53,7 @@ public class Forest1 implements Forest<Integer, double[]> {
         throw new UnsupportedOperationException("Not allowed");
     }
 
-    public static <C> Forest1 createFromForest(Forest<Integer, C> forest, double[] cutPoints) {
+    public static <C> Forest1 createFromForest(Forest<Integer, C> forest) {
         int maxChildren = 2;
 
         Node<Integer, C>[] nodes = forest.getNodes();
@@ -78,13 +76,13 @@ public class Forest1 implements Forest<Integer, double[]> {
             }
             ++i;
         }
-        return new Forest1(features, values, leafIndicators, offsets, cutPoints, roots, new SpecializedCondition());
+        return new Forest1(features, values, leafIndicators, offsets, roots, new SpecializedCondition());
     }
 
     private double traverseSingleTree(int root, double[] features) {
         int node = root;
         while (!leafIndicators[node]) {
-            double cutPoint = cutPoints[node];
+            double cutPoint = values[node];
             int childOffset = condition.childOffset(cutPoint, this.features[node], features);
             int offset = (childOffset == 0) ? offsets[node * 2] : offsets[node * 2 + 1];
             node = root + offset;

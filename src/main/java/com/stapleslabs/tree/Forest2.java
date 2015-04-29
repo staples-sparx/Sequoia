@@ -9,12 +9,12 @@ import java.util.Set;
  */
 public class Forest2 implements Forest<Integer, double[]> {
 
-    private final ByteBuffer newForest;
+    private final ByteBuffer forest;
     private final int[] roots;
     private final SpecializedCondition condition;
 
-    public Forest2(ByteBuffer newForest, int[] roots, SpecializedCondition condition) {
-        this.newForest = newForest;
+    public Forest2(ByteBuffer forest, int[] roots, SpecializedCondition condition) {
+        this.forest = forest;
         this.roots = roots;
         this.condition = condition;
     }
@@ -22,8 +22,6 @@ public class Forest2 implements Forest<Integer, double[]> {
 
     @Override
     public double[] reduceToValues(double[] features) {
-        // Obviously not threadsafe
-        newForest.rewind();
         double[] values = new double[roots.length];
         for (int i = 0; i < roots.length; i++) {
             values[i] = traverseSingleTree(roots[i], features);
@@ -79,13 +77,13 @@ public class Forest2 implements Forest<Integer, double[]> {
     private double traverseSingleTree(int root, double[] features) {
         int rootOffset = root * 30;
         int nodeOffset = rootOffset;
-        while (newForest.getShort(nodeOffset) != 1) {
-            int feature = newForest.getInt(nodeOffset + 2);
-            double cutPoint = newForest.getDouble(nodeOffset + 6);
+        while (forest.getShort(nodeOffset) != 1) {
+            int feature = forest.getInt(nodeOffset + 2);
+            double cutPoint = forest.getDouble(nodeOffset + 6);
             int childOffset = condition.childOffset(cutPoint, feature, features);
-            int offset = (childOffset == 0) ? newForest.getInt(nodeOffset + 14) : newForest.getInt(nodeOffset + 18);
+            int offset = (childOffset == 0) ? forest.getInt(nodeOffset + 14) : forest.getInt(nodeOffset + 18);
             nodeOffset = rootOffset + (offset * 30);
         }
-        return newForest.getDouble(nodeOffset + 22);
+        return forest.getDouble(nodeOffset + 22);
     }
 }

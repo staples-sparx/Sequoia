@@ -33,7 +33,7 @@ public class ForestTest {
             singleResults.add(tree.reduceToValue(features));
         }
 
-        Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
+        Forest<TestFeature, Map<TestFeature, Integer>> forest = new ForestImpl<>(trees);
 
         int counter = 0;
         for (double d : forest.reduceToValues(features)) {
@@ -49,7 +49,7 @@ public class ForestTest {
         missingFeatures.add(TestFeature.COG);
         missingFeatures.add(TestFeature.MONTH);
 
-        Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
+        Forest<TestFeature, Map<TestFeature, Integer>> forest = new ForestImpl<>(trees);
 
         Forest<TestFeature, Map<TestFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
 
@@ -60,7 +60,7 @@ public class ForestTest {
     public void testReduceToForestWithoutMissingFeatures() {
         Set<TestFeature> missingFeatures = new HashSet<>();
 
-        Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
+        Forest<TestFeature, Map<TestFeature, Integer>> forest = new ForestImpl<>(trees);
 
         Forest<TestFeature, Map<TestFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
 
@@ -79,7 +79,7 @@ public class ForestTest {
         missingFeatures.add(TestFeature.COST);
         missingFeatures.add(TestFeature.DISTANCE);
 
-        Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
+        Forest<TestFeature, Map<TestFeature, Integer>> forest = new ForestImpl<>(trees);
 
         Forest<TestFeature, Map<TestFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
 
@@ -99,7 +99,7 @@ public class ForestTest {
             differingFeatures.add(TestFeature.COG);
             differingFeatures.add(TestFeature.MONTH);
 
-            Forest<TestFeature, Map<TestFeature, Integer>> forest = new Forest<>(trees);
+            Forest<TestFeature, Map<TestFeature, Integer>> forest = new ForestImpl<>(trees);
 
             double[][] results = forest.optimizedReduceToValues(Arrays.asList(features), differingFeatures);
 

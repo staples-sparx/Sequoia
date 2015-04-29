@@ -22,6 +22,8 @@ public class Forest2 implements Forest<Integer, double[]> {
 
     @Override
     public double[] reduceToValues(double[] features) {
+        // Obviously not threadsafe
+        newForest.rewind();
         double[] values = new double[roots.length];
         for (int i = 0; i < roots.length; i++) {
             values[i] = traverseSingleTree(roots[i], features);
@@ -59,7 +61,6 @@ public class Forest2 implements Forest<Integer, double[]> {
         int[] roots = forest.getRoots();
         int i = 0;
         for (Node<Integer, C> node : nodes) {
-            int offset = i * 22;
             short isLeaf = 1;
             short isNotLeaf = 0;
             newForest.putShort(node.isLeaf ? isLeaf : isNotLeaf);
@@ -76,13 +77,14 @@ public class Forest2 implements Forest<Integer, double[]> {
     }
 
     private double traverseSingleTree(int root, double[] features) {
-        int nodeOffset = root * 30;
+        int rootOffset = root * 30;
+        int nodeOffset = rootOffset;
         while (newForest.getShort(nodeOffset) != 1) {
             int feature = newForest.getInt(nodeOffset + 2);
             double cutPoint = newForest.getDouble(nodeOffset + 6);
             int childOffset = condition.childOffset(cutPoint, feature, features);
             int offset = (childOffset == 0) ? newForest.getInt(nodeOffset + 14) : newForest.getInt(nodeOffset + 18);
-            nodeOffset = root + (offset * 30);
+            nodeOffset = rootOffset + (offset * 30);
         }
         return newForest.getDouble(nodeOffset + 22);
     }

@@ -1,9 +1,9 @@
 package org.sparx.tree;
 
-import org.sparx.tree.utils.TestFeature;
-import org.sparx.tree.utils.TestTrees;
 import org.junit.Before;
 import org.junit.Test;
+import org.sparx.tree.utils.TestFeature;
+import org.sparx.tree.utils.TestTrees;
 
 import java.util.*;
 
@@ -12,14 +12,14 @@ import static org.junit.Assert.assertTrue;
 
 public class DefaultForestTest {
 
-    private final List<Tree<TestFeature, Map<TestFeature, Integer>>> trees = new ArrayList<>();
-    private Map<TestFeature, Integer> features;
+    private final List<Tree<Integer, double[]>> trees = new ArrayList<>();
+    private double[] features;
 
     @Before
     public void setUp() {
         TestTrees treeGenerator = new TestTrees();
         for (int i = 0; i < 30; i++) {
-            trees.add(treeGenerator.getRandomTree());
+            trees.add(treeGenerator.getRandomTree(true));
         }
         features = treeGenerator.getRandomFeatures();
 
@@ -29,14 +29,14 @@ public class DefaultForestTest {
     public void testReduceToValuesProducesSameValuesAsTrees() {
         List<Double> singleResults = new ArrayList<>();
 
-        for (Tree<TestFeature, Map<TestFeature, Integer>> tree : trees) {
-            singleResults.add(tree.reduceToValue(features));
+        for (Tree<Integer, double[]> tree : trees) {
+            singleResults.add(tree.scoreTree(features));
         }
 
-        Forest<TestFeature, Map<TestFeature, Integer>> forest = Planter.createForestFromTrees(trees);
+        Forest<Integer, double[]> forest = Planter.createForestFromTrees(trees);
 
         int counter = 0;
-        for (double d : forest.reduceToValues(features)) {
+        for (double d : forest.scoreTrees(features)) {
             assertEquals(singleResults.get(counter), d, 0.0);
             counter++;
         }
@@ -44,49 +44,49 @@ public class DefaultForestTest {
 
     @Test
     public void testReduceToForestWithMissingFeatures() {
-        Set<TestFeature> missingFeatures = new HashSet<>();
-        missingFeatures.add(TestFeature.CLASS_ID);
-        missingFeatures.add(TestFeature.COG);
-        missingFeatures.add(TestFeature.MONTH);
+        Set<Integer> missingFeatures = new HashSet<>();
+        missingFeatures.add(2);
+        missingFeatures.add(3);
+        missingFeatures.add(4);
 
-        Forest<TestFeature, Map<TestFeature, Integer>> forest = Planter.createForestFromTrees(trees);
+        Forest<Integer, double[]> forest = Planter.createForestFromTrees(trees);
 
-        Forest<TestFeature, Map<TestFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+        Forest<Integer, double[]> subForest = forest.reduceToForest(features, missingFeatures);
 
-        assertAccurateResults(subForest.reduceToValues(features));
+        assertAccurateResults(subForest.scoreTrees(features));
     }
 
     @Test
     public void testReduceToForestWithoutMissingFeatures() {
-        Set<TestFeature> missingFeatures = new HashSet<>();
+        Set<Integer> missingFeatures = new HashSet<>();
 
-        Forest<TestFeature, Map<TestFeature, Integer>> forest = Planter.createForestFromTrees(trees);
+        Forest<Integer, double[]> forest = Planter.createForestFromTrees(trees);
 
-        Forest<TestFeature, Map<TestFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+        Forest<Integer, double[]> subForest = forest.reduceToForest(features, missingFeatures);
 
         assertTrue(subForest.getNodes().length == trees.size());
 
-        assertAccurateResults(subForest.reduceToValues(features));
+        assertAccurateResults(subForest.scoreTrees(features));
     }
 
     @Test
     public void testReduceToForestWithAllFeaturesMissing() {
-        Set<TestFeature> missingFeatures = new HashSet<>();
-        missingFeatures.add(TestFeature.CLASS_ID);
-        missingFeatures.add(TestFeature.COG);
-        missingFeatures.add(TestFeature.MONTH);
-        missingFeatures.add(TestFeature.DAY_OF_WEEK);
-        missingFeatures.add(TestFeature.COST);
-        missingFeatures.add(TestFeature.DISTANCE);
+        Set<Integer> missingFeatures = new HashSet<>();
+        missingFeatures.add(0);
+        missingFeatures.add(1);
+        missingFeatures.add(2);
+        missingFeatures.add(3);
+        missingFeatures.add(4);
+        missingFeatures.add(5);
 
-        Forest<TestFeature, Map<TestFeature, Integer>> forest = Planter.createForestFromTrees(trees);
+        Forest<Integer, double[]> forest = Planter.createForestFromTrees(trees);
 
-        Forest<TestFeature, Map<TestFeature, Integer>> subForest = forest.reduceToForest(features, missingFeatures);
+        Forest<Integer, double[]> subForest = forest.reduceToForest(features, missingFeatures);
 
         assertTrue(subForest.getNodes().length >= forest.getNodes().length);
 
 
-        assertAccurateResults(subForest.reduceToValues(features));
+        assertAccurateResults(subForest.scoreTrees(features));
     }
 
     @Test
@@ -94,12 +94,12 @@ public class DefaultForestTest {
 
         for (int i = 0; i < 1000; ++i) {
 
-            Set<TestFeature> differingFeatures = new HashSet<>();
-            differingFeatures.add(TestFeature.CLASS_ID);
-            differingFeatures.add(TestFeature.COG);
-            differingFeatures.add(TestFeature.MONTH);
+            Set<Integer> differingFeatures = new HashSet<>();
+            differingFeatures.add(2);
+            differingFeatures.add(3);
+            differingFeatures.add(5);
 
-            Forest<TestFeature, Map<TestFeature, Integer>> forest = Planter.createForestFromTrees(trees);
+            Forest<Integer, double[]> forest = Planter.createForestFromTrees(trees);
 
             double[][] results = forest.optimizedReduceToValues(Arrays.asList(features), differingFeatures);
 
@@ -115,8 +115,8 @@ public class DefaultForestTest {
 
         List<Double> singleResults = new ArrayList<>();
 
-        for (Tree<TestFeature, Map<TestFeature, Integer>> tree : trees) {
-            singleResults.add(tree.reduceToValue(features));
+        for (Tree<Integer, double[]> tree : trees) {
+            singleResults.add(tree.scoreTree(features));
         }
 
         int counter = 0;

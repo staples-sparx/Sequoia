@@ -23,7 +23,7 @@ public class DefaultForest<F, C> implements Forest<F,C> {
     }
 
     @Override
-    public double[] reduceToValues(C features) {
+    public double[] scoreTrees(C features) {
         double[] values = new double[roots.length];
         for (int i = 0; i < roots.length; i++) {
             values[i] = traverseSingleTree(roots[i], features);

@@ -14,30 +14,30 @@ public class TestTrees {
     private static final HashMap<Integer, NodeBlueprint> branchNodeRecipes;
 
     static {
-        Map<Integer, Integer> categoricalMap = new HashMap<>();
-        categoricalMap.put(0, 1);
-        categoricalMap.put(1, 2);
-        categoricalMap.put(2, 1);
-        categoricalMap.put(3, 2);
-        categoricalMap.put(4, 1);
+        Map<Double, Integer> categoricalMap = new HashMap<>();
+        categoricalMap.put(0d, 1);
+        categoricalMap.put(1d, 2);
+        categoricalMap.put(2d, 1);
+        categoricalMap.put(3d, 2);
+        categoricalMap.put(4d, 1);
 
         branchNodeRecipes = new HashMap<>();
-        branchNodeRecipes.put(0, new NodeBlueprint(TestFeature.COST, new Numeric(5)));
-        branchNodeRecipes.put(1, new NodeBlueprint(TestFeature.MONTH, new Categorical(categoricalMap)));
-        branchNodeRecipes.put(2, new NodeBlueprint(TestFeature.DAY_OF_WEEK, new Categorical(categoricalMap)));
-        branchNodeRecipes.put(3, new NodeBlueprint(TestFeature.COG, new Numeric(5)));
-        branchNodeRecipes.put(4, new NodeBlueprint(TestFeature.DISTANCE, new Numeric(5)));
-        branchNodeRecipes.put(5, new NodeBlueprint(TestFeature.CLASS_ID, new Categorical(categoricalMap)));
+        branchNodeRecipes.put(0, new NodeBlueprint(0, new Numeric(5)));
+        branchNodeRecipes.put(1, new NodeBlueprint(1, new Categorical(categoricalMap)));
+        branchNodeRecipes.put(2, new NodeBlueprint(2, new Categorical(categoricalMap)));
+        branchNodeRecipes.put(3, new NodeBlueprint(3, new Numeric(5)));
+        branchNodeRecipes.put(4, new NodeBlueprint(4, new Numeric(5)));
+        branchNodeRecipes.put(5, new NodeBlueprint(5, new Categorical(categoricalMap)));
     }
 
-    public Tree<TestFeature, Map<TestFeature, Integer>> getRandomTree() {
+    public Tree<Integer, double[]> getRandomTree(boolean includeCategorical) {
         Random random = new Random();
 
-        List<Node<TestFeature, Map<TestFeature, Integer>>> nodes = new ArrayList<>();
+        List<Node<Integer, double[]>> nodes = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
             NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
             int[] childOffsets = {random.nextInt(3) + 1, random.nextInt(3) + 1, random.nextInt(3) + 1};
-            Node<TestFeature, Map<TestFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false,
+            Node<Integer, double[]> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false,
                     childOffsets, nodeBlueprint.getCondition());
             nodes.add(node);
         }
@@ -45,56 +45,60 @@ public class TestTrees {
         for (int i = 1; i < 4; i++) {
             NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
             int[] childOffsets = {random.nextInt(8) + 4, random.nextInt(8) + 4, random.nextInt(8) + 4};
-            Node<TestFeature, Map<TestFeature, Integer>> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false,
+            Node<Integer, double[]> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false,
                     childOffsets, nodeBlueprint.getCondition());
             nodes.add(node);
         }
         for (int i = 0; i < 8; i++) {
             int[] childOffsets = {};
-            nodes.add(new Node<TestFeature, Map<TestFeature, Integer>>(null, random.nextInt(100), true, childOffsets, null));
+            nodes.add(new Node<Integer, double[]>(null, random.nextInt(100), true, childOffsets, null));
         }
         return new Tree<>(nodes);
     }
 
-    public Map<TestFeature, Integer> getRandomFeatures() {
+    public double[] getRandomFeatures() {
         Random random = new Random();
-        Map<TestFeature, Integer> featureMap = new HashMap<>();
+        double[] features = new double[6];
 
-        TestFeature[] numericFeatures = {TestFeature.COST, TestFeature.COG, TestFeature.DISTANCE};
-        for (TestFeature numericFeature : numericFeatures) {
+        int[] numericFeatures = {0, 3, 4};
+        for (int numericFeature : numericFeatures) {
             if (random.nextInt(10) > 1) {
-                featureMap.put(numericFeature, random.nextInt(10));
+                features[numericFeature] = random.nextInt(10);
+            } else {
+                features[numericFeature] = -1.0;
             }
         }
 
-        TestFeature[] categoricalFeatures = {TestFeature.DAY_OF_WEEK, TestFeature.MONTH, TestFeature.CLASS_ID};
-        for (TestFeature categoricalFeature : categoricalFeatures) {
+        int[] categoricalFeatures = {2, 1, 5};
+        for (int categoricalFeature : categoricalFeatures) {
             if (random.nextInt(10) > 1) {
-                featureMap.put(categoricalFeature, random.nextInt(5));
+                features[categoricalFeature] = random.nextInt(5);
+            } else {
+                features[categoricalFeature] = -1.0;
             }
         }
-        return featureMap;
+        return features;
     }
 
-    private static class Categorical implements Condition<TestFeature, Map<TestFeature, Integer>> {
+    private static class Categorical implements Condition<Integer, double[]> {
 
-        private final Map<Integer, Integer> conditions;
+        private final Map<Double, Integer> conditions;
 
-        public Categorical(Map<Integer, Integer> conditions) {
+        public Categorical(Map<Double, Integer> conditions) {
             this.conditions = conditions;
         }
 
         @Override
-        public int nextOffsetIndex(final TestFeature feature, final Map<TestFeature, Integer> features) {
-            Integer featureValue = features.get(feature);
-            if (featureValue == null) {
+        public int nextOffsetIndex(Integer feature, double[] features) {
+            double featureValue = features[feature];
+            if (featureValue == -1.0) {
                 return 0;
             }
             return conditions.get(featureValue);
         }
     }
 
-    private static class Numeric implements Condition<TestFeature, Map<TestFeature, Integer>> {
+    private static class Numeric implements Condition<Integer, double[]> {
 
         private final int cutPoint;
 
@@ -103,9 +107,9 @@ public class TestTrees {
         }
 
         @Override
-        public int nextOffsetIndex(final TestFeature feature, final Map<TestFeature, Integer> features) {
-            Integer value = features.get(feature);
-            if (value == null) {
+        public int nextOffsetIndex(final Integer feature, double[] features) {
+            double value = features[feature];
+            if (value == -1.0) {
                 return 0;
             } else if (value > cutPoint) {
                 return 1;

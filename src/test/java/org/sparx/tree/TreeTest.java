@@ -45,25 +45,25 @@ public class TreeTest {
     }
 
     @Test
-    public void testReduceToValue() {
+    public void testScoreTree() {
         Map<Feature, Integer> features = new HashMap<>();
-        assertEquals(15.0, tree.reduceToValue(features), 0.0);
+        assertEquals(15.0, tree.scoreTree(features), 0.0);
 
         features.put(Feature.COST, 24);
-        assertEquals(5.0, tree.reduceToValue(features), 0.0);
+        assertEquals(5.0, tree.scoreTree(features), 0.0);
 
         features.put(Feature.MONTH, 2);
-        assertEquals(5.0, tree.reduceToValue(features), 0.0);
+        assertEquals(5.0, tree.scoreTree(features), 0.0);
 
         features.put(Feature.MONTH, 1);
-        assertEquals(10.0, tree.reduceToValue(features), 0.0);
+        assertEquals(10.0, tree.scoreTree(features), 0.0);
 
         features.put(Feature.COST, 22);
         features.put(Feature.DAY_OF_WEEK, 1);
-        assertEquals(15.0, tree.reduceToValue(features), 0.0);
+        assertEquals(15.0, tree.scoreTree(features), 0.0);
 
         features.put(Feature.DAY_OF_WEEK, 2);
-        assertEquals(5.0, tree.reduceToValue(features), 0.0);
+        assertEquals(5.0, tree.scoreTree(features), 0.0);
     }
 
     @Test
@@ -77,10 +77,10 @@ public class TreeTest {
         Tree<Feature, Map<Feature, Integer>> subTree = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(3, subTree.getNodes().length);
-        assertEquals(15.0, subTree.reduceToValue(features), 0.0);
+        assertEquals(15.0, subTree.scoreTree(features), 0.0);
 
         features.put(Feature.DAY_OF_WEEK, 2);
-        assertEquals(5.0, subTree.reduceToValue(features), 0.0);
+        assertEquals(5.0, subTree.scoreTree(features), 0.0);
     }
 
     @Test
@@ -94,14 +94,14 @@ public class TreeTest {
         Tree<Feature, Map<Feature, Integer>> singleNodeThree = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(1, singleNodeThree.getNodes().length);
-        assertEquals(5.0, singleNodeThree.reduceToValue(features), 0.0);
+        assertEquals(5.0, singleNodeThree.scoreTree(features), 0.0);
 
         features.put(Feature.MONTH, 1);
 
         Tree<Feature, Map<Feature, Integer>> singleNodeFour = tree.reduceToTree(features, missingFeatures);
 
         assertEquals(1, singleNodeFour.getNodes().length);
-        assertEquals(10.0, singleNodeFour.reduceToValue(features), 0.0);
+        assertEquals(10.0, singleNodeFour.scoreTree(features), 0.0);
     }
 
     @Test

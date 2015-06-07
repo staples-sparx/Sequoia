@@ -1,28 +1,48 @@
 package org.sparx.tree;
 
 import org.junit.Before;
-import org.sparx.tree.utils.TestFeature;
+import org.junit.Test;
 import org.sparx.tree.utils.TestTrees;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by timbrooks on 6/7/15.
  */
 public class DoubleForestTest {
 
-    private final List<Tree<TestFeature, Map<TestFeature, Integer>>> trees = new ArrayList<>();
-    private Map<TestFeature, Integer> features;
+    private final List<Tree<Integer, double[]>> trees = new ArrayList<>();
+    private double[] features;
 
     @Before
     public void setUp() {
         TestTrees treeGenerator = new TestTrees();
         for (int i = 0; i < 30; i++) {
-            trees.add(treeGenerator.getRandomTree());
+            trees.add(treeGenerator.getRandomTree(false));
         }
         features = treeGenerator.getRandomFeatures();
-
     }
+
+    @Test
+    public void testScoreTreesProducesSameValuesAsTrees() {
+        List<Double> singleResults = new ArrayList<>();
+
+        for (Tree<Integer, double[]> tree : trees) {
+            singleResults.add(tree.scoreTree(features));
+        }
+
+        Forest<Integer, double[]> forest = Planter.createForestFromTrees(trees);
+//        DoubleForest.createFromForest(forest);
+
+        int counter = 0;
+//        for (double d : forest.scoreTrees(features)) {
+//            assertEquals(singleResults.get(counter), d, 0.0);
+//            counter++;
+//        }
+    }
+
+
 }

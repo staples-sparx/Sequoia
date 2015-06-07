@@ -27,7 +27,7 @@ public class DoubleForest implements Forest<Integer, double[]> {
         this.condition = condition;
     }
 
-    public double[] reduceToValues(double[] features) {
+    public double[] scoreTrees(double[] features) {
         double[] values = new double[roots.length];
         for (int i = 0; i < roots.length; i++) {
             values[i] = traverseSingleTree(roots[i], features);

@@ -9,19 +9,19 @@ import java.util.Map;
  */
 public class NodeBlueprint {
 
-    private final TestFeature feature;
-    private final Condition<TestFeature, Map<TestFeature, Integer>> condition;
+    private final Integer feature;
+    private final Condition<Integer, double[]> condition;
 
-    public NodeBlueprint(TestFeature feature, Condition<TestFeature, Map<TestFeature, Integer>> condition) {
+    public NodeBlueprint(Integer feature, Condition<Integer, double[]> condition) {
         this.feature = feature;
         this.condition = condition;
     }
 
-    public TestFeature getFeature() {
+    public Integer getFeature() {
         return feature;
     }
 
-    public Condition<TestFeature, Map<TestFeature, Integer>> getCondition() {
+    public Condition<Integer, double[]> getCondition() {
         return condition;
     }
 }

@@ -17,7 +17,7 @@ public class Tree<F, C> {
     }
 
 
-    public double reduceToValue(C features) {
+    public double scoreTree(C features) {
         Node<F, C> node = nodes[0];
         while (!node.isLeaf) {
             node = nodes[node.nextNodeOffset(features)];

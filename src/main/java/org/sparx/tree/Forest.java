@@ -7,7 +7,7 @@ import java.util.Set;
  * Created by timbrooks on 4/28/15.
  */
 public interface Forest<F, C> {
-    double[] reduceToValues(C features);
+    double[] scoreTrees(C features);
 
     Forest<F, C> reduceToForest(C features, Set<F> missingFeatures);
 

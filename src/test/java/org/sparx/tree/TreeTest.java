@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class TreeTest {
@@ -102,44 +101,6 @@ public class TreeTest {
 
         assertEquals(1, singleNodeFour.getNodes().length);
         assertEquals(10.0, singleNodeFour.scoreTree(features), 0.0);
-    }
-
-    @Test
-    public void testOptimizedReduceToValueWithNoFeaturesDiffering() {
-        Set<Feature> differingFeatures = new HashSet<>();
-
-        Map<Feature, Integer> features1 = new HashMap<>();
-        features1.put(Feature.COST, 24);
-        features1.put(Feature.MONTH, 2);
-        features1.put(Feature.DAY_OF_WEEK, 1);
-
-        Map<Feature, Integer> features2 = new HashMap<>(features1);
-
-        Map<Feature, Integer> features3 = new HashMap<>(features2);
-
-
-        List<Map<Feature, Integer>> featureList = Arrays.asList(features1, features2, features3);
-
-        double[] expected = {5.0, 5.0, 5.0};
-        assertArrayEquals(expected, tree.optimizedReduceToValue(featureList, differingFeatures), 0.0);
-    }
-
-    @Test
-    public void testOptimizedReduceToValueWithFeatureDiffering() {
-        Set<Feature> differingFeatures = new HashSet<>();
-        differingFeatures.add(Feature.DAY_OF_WEEK);
-        Map<Feature, Integer> features1 = new HashMap<>();
-        features1.put(Feature.COST, 22);
-        features1.put(Feature.DAY_OF_WEEK, 1);
-
-        Map<Feature, Integer> features2 = new HashMap<>(features1);
-        features2.put(Feature.DAY_OF_WEEK, 2);
-
-        List<Map<Feature, Integer>> featureList = Arrays.asList(features1, features2);
-
-
-        double[] expected = {15.0, 5.0};
-        assertArrayEquals(expected, tree.optimizedReduceToValue(featureList, differingFeatures), 0.0);
     }
 
     private enum Feature {

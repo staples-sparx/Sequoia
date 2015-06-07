@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.sparx.tree.utils.TestTrees;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;

@@ -1,6 +1,5 @@
 package org.sparx.tree;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -10,8 +9,6 @@ public interface Forest<F, C> {
     double[] scoreTrees(C features);
 
     Forest<F, C> reduceToForest(C features, Set<F> missingFeatures);
-
-    double[][] optimizedReduceToValues(List<C> features, Set<F> differingFeatures);
 
     int[] getRoots();
 

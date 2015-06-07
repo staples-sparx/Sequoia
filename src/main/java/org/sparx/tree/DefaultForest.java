@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Created by timbrooks on 5/14/14.
  */
-public class DefaultForest<F, C> implements Forest<F,C> {
+public class DefaultForest<F, C> implements Forest<F, C> {
 
     private final Node<F, C>[] nodes;
     private final int[] roots;
@@ -45,27 +45,6 @@ public class DefaultForest<F, C> implements Forest<F,C> {
     }
 
     @Override
-    public double[][] optimizedReduceToValues(List<C> features, Set<F> differingFeatures) {
-        double[][] results = new double[features.size()][];
-        Path[] paths = new Path[roots.length];
-
-        C firstFeatureMap = features.get(0);
-        for (int i = 0; i < roots.length; ++i) {
-            Path path = new Path();
-            TreeReducer.getFastPath(roots[i], nodes, firstFeatureMap, differingFeatures, path);
-            paths[i] = path;
-        }
-
-
-        for (int i = 0; i < features.size(); ++i) {
-            results[i] = optimizedTraverseForest(features.get(i), paths);
-        }
-
-
-        return results;
-    }
-
-    @Override
     public int[] getRoots() {
         return roots;
     }
@@ -73,30 +52,6 @@ public class DefaultForest<F, C> implements Forest<F,C> {
     @Override
     public Node<F, C>[] getNodes() {
         return nodes;
-    }
-
-    private double[] optimizedTraverseForest(C features, Path[] paths) {
-        double[] results = new double[paths.length];
-        for (int i = 0; i < paths.length; ++i) {
-            Path path = paths[i];
-            int[][] fastPath = path.fastPath;
-            int currentIndex = path.root;
-            Node<F, C> node = nodes[currentIndex];
-            while (!node.isLeaf) {
-
-                int[] fastPathOffsets = fastPath[currentIndex];
-                if (fastPathOffsets != null) {
-                    currentIndex = node.nextNodeOffset(features, fastPathOffsets);
-                } else {
-                    currentIndex = node.nextNodeOffset(features);
-
-                }
-                node = nodes[currentIndex];
-            }
-            results[i] = node.value;
-        }
-        return results;
-
     }
 
     private double traverseSingleTree(int root, C features) {

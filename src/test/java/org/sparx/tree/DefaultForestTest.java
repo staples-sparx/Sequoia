@@ -2,10 +2,12 @@ package org.sparx.tree;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.sparx.tree.utils.TestFeature;
 import org.sparx.tree.utils.TestTrees;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -87,28 +89,6 @@ public class DefaultForestTest {
 
 
         assertAccurateResults(subForest.scoreTrees(features));
-    }
-
-    @Test
-    public void testOptimizedReduceToValuesProducesExpectedResults() {
-
-        for (int i = 0; i < 1000; ++i) {
-
-            Set<Integer> differingFeatures = new HashSet<>();
-            differingFeatures.add(2);
-            differingFeatures.add(3);
-            differingFeatures.add(5);
-
-            Forest<Integer, double[]> forest = Planter.createForestFromTrees(trees);
-
-            double[][] results = forest.optimizedReduceToValues(Arrays.asList(features), differingFeatures);
-
-            for (double[] result : results) {
-                assertAccurateResults(result);
-            }
-        }
-
-
     }
 
     private void assertAccurateResults(double[] results) {

@@ -32,31 +32,6 @@ public class Tree<F, C> {
         return new Tree<>(subTreeNodes);
     }
 
-    public double[] optimizedReduceToValue(List<C> features, Set<F> differingFeatures) {
-        Path path = new Path();
-        TreeReducer.getFastPath(0, nodes, features.get(0), differingFeatures, path);
-        int[][] fastPath = path.fastPath;
-        double[] results = new double[features.size()];
-
-        for (int i = 0; i < features.size(); ++i) {
-            int currentIndex = path.root;
-            Node<F, C> node = nodes[currentIndex];
-            while (!node.isLeaf) {
-
-                int[] fastPathOffsets = fastPath[currentIndex];
-                if (fastPathOffsets != null) {
-                    currentIndex = node.nextNodeOffset(features.get(i), fastPathOffsets);
-                } else {
-                    currentIndex = node.nextNodeOffset(features.get(i));
-
-                }
-                node = nodes[currentIndex];
-            }
-            results[i] = node.value;
-        }
-        return results;
-    }
-
     public Node<F, C>[] getNodes() {
         return nodes;
     }

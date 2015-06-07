@@ -1,6 +1,5 @@
 package org.sparx.tree;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -37,11 +36,6 @@ public class DoubleForest implements Forest<Integer, double[]> {
 
     @Override
     public Forest<Integer, double[]> reduceToForest(double[] features, Set<Integer> missingFeatures) {
-        throw new UnsupportedOperationException("Not allowed");
-    }
-
-    @Override
-    public double[][] optimizedReduceToValues(List<double[]> features, Set<Integer> differingFeatures) {
         throw new UnsupportedOperationException("Not allowed");
     }
 

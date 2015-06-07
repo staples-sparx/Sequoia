@@ -1,5 +1,7 @@
 package org.sparx.tree;
 
+import java.util.Arrays;
+
 /**
  * Created by timbrooks on 5/14/14.
  */
@@ -37,5 +39,17 @@ public class Node<F, C> {
     public void addChildOffset(int child) {
         childOffsets[currentChildIndex] = child;
         ++currentChildIndex;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "feature=" + feature +
+                ", value=" + value +
+                ", isLeaf=" + isLeaf +
+                ", childOffsets=" + Arrays.toString(childOffsets) +
+                ", condition=" + condition +
+                ", currentChildIndex=" + currentChildIndex +
+                '}';
     }
 }

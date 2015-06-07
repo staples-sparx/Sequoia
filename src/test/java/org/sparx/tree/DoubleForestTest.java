@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.sparx.tree.utils.TestTrees;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -35,13 +36,25 @@ public class DoubleForestTest {
         }
 
         Forest<Integer, double[]> forest = Planter.createForestFromTrees(trees);
-//        DoubleForest.createFromForest(forest);
+        DoubleForest doubleForest = DoubleForest.createFromForest(forest, new DoubleCondition() {
+            @Override
+            public int childOffset(double cutPoint, int feature, double[] features) {
+                double value = features[feature];
+                if (value == -1.0) {
+                    return 0;
+                } else if (value > cutPoint) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            }
+        });
 
         int counter = 0;
-//        for (double d : forest.scoreTrees(features)) {
-//            assertEquals(singleResults.get(counter), d, 0.0);
-//            counter++;
-//        }
+        for (double d : doubleForest.scoreTrees(features)) {
+            assertEquals(singleResults.get(counter), d, 0.0);
+            counter++;
+        }
     }
 
 

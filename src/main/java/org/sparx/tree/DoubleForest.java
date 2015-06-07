@@ -55,7 +55,7 @@ public class DoubleForest implements Forest<Integer, double[]> {
         throw new UnsupportedOperationException("Not allowed");
     }
 
-    public static <C> DoubleForest createFromForest(Forest<Integer, C> forest) {
+    public static <C> DoubleForest createFromForest(Forest<Integer, C> forest, DoubleCondition condition) {
         int maxChildren = 0;
 
         Node<Integer, C>[] nodes = forest.getNodes();
@@ -82,7 +82,7 @@ public class DoubleForest implements Forest<Integer, double[]> {
             }
             ++i;
         }
-        return new DoubleForest(maxChildren, features, values, leafIndicators, offsets, roots, new DoubleCondition());
+        return new DoubleForest(maxChildren, features, values, leafIndicators, offsets, roots, condition);
     }
 
     private double traverseSingleTree(int root, double[] features) {

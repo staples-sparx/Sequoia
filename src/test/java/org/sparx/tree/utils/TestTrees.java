@@ -11,7 +11,8 @@ import java.util.*;
  */
 public class TestTrees {
 
-    private static final HashMap<Integer, NodeBlueprint> branchNodeRecipes;
+    private static final Map<Integer, NodeBlueprint> branchNodeRecipes;
+    private static final int CUT_POINT = 5;
 
     static {
         Map<Double, Integer> categoricalMap = new HashMap<>();
@@ -22,36 +23,37 @@ public class TestTrees {
         categoricalMap.put(4d, 1);
 
         branchNodeRecipes = new HashMap<>();
-        branchNodeRecipes.put(0, new NodeBlueprint(0, new Numeric(5)));
-        branchNodeRecipes.put(1, new NodeBlueprint(1, new Categorical(categoricalMap)));
-        branchNodeRecipes.put(2, new NodeBlueprint(2, new Categorical(categoricalMap)));
-        branchNodeRecipes.put(3, new NodeBlueprint(3, new Numeric(5)));
-        branchNodeRecipes.put(4, new NodeBlueprint(4, new Numeric(5)));
+        branchNodeRecipes.put(0, new NodeBlueprint(0, new Numeric(CUT_POINT)));
+        branchNodeRecipes.put(1, new NodeBlueprint(1, new Numeric(CUT_POINT)));
+        branchNodeRecipes.put(2, new NodeBlueprint(2, new Numeric(CUT_POINT)));
+        branchNodeRecipes.put(3, new NodeBlueprint(3, new Categorical(categoricalMap)));
+        branchNodeRecipes.put(4, new NodeBlueprint(4, new Categorical(categoricalMap)));
         branchNodeRecipes.put(5, new NodeBlueprint(5, new Categorical(categoricalMap)));
     }
 
     public Tree<Integer, double[]> getRandomTree(boolean includeCategorical) {
         Random random = new Random();
+        int maxFeature = includeCategorical ? 6 : 3;
 
         List<Node<Integer, double[]>> nodes = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
-            NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
+            NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(maxFeature));
             int[] childOffsets = {random.nextInt(3) + 1, random.nextInt(3) + 1, random.nextInt(3) + 1};
-            Node<Integer, double[]> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false,
+            Node<Integer, double[]> node = new Node<>(nodeBlueprint.getFeature(), CUT_POINT, false,
                     childOffsets, nodeBlueprint.getCondition());
             nodes.add(node);
         }
 
         for (int i = 1; i < 4; i++) {
-            NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(6));
+            NodeBlueprint nodeBlueprint = branchNodeRecipes.get(random.nextInt(maxFeature));
             int[] childOffsets = {random.nextInt(8) + 4, random.nextInt(8) + 4, random.nextInt(8) + 4};
-            Node<Integer, double[]> node = new Node<>(nodeBlueprint.getFeature(), -1.0, false,
+            Node<Integer, double[]> node = new Node<>(nodeBlueprint.getFeature(), CUT_POINT, false,
                     childOffsets, nodeBlueprint.getCondition());
             nodes.add(node);
         }
         for (int i = 0; i < 8; i++) {
             int[] childOffsets = {};
-            nodes.add(new Node<Integer, double[]>(null, random.nextInt(100), true, childOffsets, null));
+            nodes.add(new Node<Integer, double[]>(-1, random.nextInt(100), true, childOffsets, null));
         }
         return new Tree<>(nodes);
     }
@@ -60,7 +62,7 @@ public class TestTrees {
         Random random = new Random();
         double[] features = new double[6];
 
-        int[] numericFeatures = {0, 3, 4};
+        int[] numericFeatures = {0, 1, 2};
         for (int numericFeature : numericFeatures) {
             if (random.nextInt(10) > 1) {
                 features[numericFeature] = random.nextInt(10);
@@ -69,7 +71,7 @@ public class TestTrees {
             }
         }
 
-        int[] categoricalFeatures = {2, 1, 5};
+        int[] categoricalFeatures = {3, 4, 5};
         for (int categoricalFeature : categoricalFeatures) {
             if (random.nextInt(10) > 1) {
                 features[categoricalFeature] = random.nextInt(5);

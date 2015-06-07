@@ -1,6 +1,6 @@
-package com.stapleslabs.utils;
+package org.sparx.tree.utils;
 
-import com.stapleslabs.tree.ICondition;
+import org.sparx.tree.ICondition;
 
 import java.util.Map;
 

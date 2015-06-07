@@ -1,8 +1,8 @@
-package com.stapleslabs.utils;
+package org.sparx.tree.utils;
 
-import com.stapleslabs.tree.ICondition;
-import com.stapleslabs.tree.Node;
-import com.stapleslabs.tree.Tree;
+import org.sparx.tree.ICondition;
+import org.sparx.tree.Node;
+import org.sparx.tree.Tree;
 
 import java.util.*;
 

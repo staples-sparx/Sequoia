@@ -1,4 +1,4 @@
-package com.stapleslabs.tree;
+package org.sparx.tree;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntStack;

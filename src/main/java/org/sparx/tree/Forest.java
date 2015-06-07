@@ -1,4 +1,4 @@
-package com.stapleslabs.tree;
+package org.sparx.tree;
 
 import java.util.List;
 import java.util.Set;

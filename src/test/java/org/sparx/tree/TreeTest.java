@@ -1,4 +1,4 @@
-package com.stapleslabs.tree;
+package org.sparx.tree;
 
 import org.junit.Before;
 import org.junit.Test;

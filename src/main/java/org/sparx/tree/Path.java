@@ -1,4 +1,4 @@
-package com.stapleslabs.tree;
+package org.sparx.tree;
 
 /**
  * Created by timbrooks on 6/12/14.

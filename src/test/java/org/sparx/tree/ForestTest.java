@@ -1,7 +1,7 @@
-package com.stapleslabs.tree;
+package org.sparx.tree;
 
-import com.stapleslabs.utils.TestFeature;
-import com.stapleslabs.utils.TestTrees;
+import org.sparx.tree.utils.TestFeature;
+import org.sparx.tree.utils.TestTrees;
 import org.junit.Before;
 import org.junit.Test;
 

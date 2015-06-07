@@ -40,7 +40,7 @@ public class TreeTest {
         Node<Feature, Map<Feature, Integer>> nodeFour = new Node<>(null, 10.0, true, childChildOffsets, null);
         Node<Feature, Map<Feature, Integer>> nodeFive = new Node<>(null, 15.0, true, childChildOffsets, null);
 
-        tree = new Tree<>(Arrays.asList(nodeZero, nodeOne, nodeTwo, nodeThree, nodeFour, nodeFive));
+        tree = Planter.createTreeFromNodes(Arrays.asList(nodeZero, nodeOne, nodeTwo, nodeThree, nodeFour, nodeFive));
     }
 
     @Test

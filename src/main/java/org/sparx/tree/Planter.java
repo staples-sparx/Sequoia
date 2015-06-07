@@ -26,4 +26,10 @@ public final class Planter {
         Node<F, C>[] nodes = forestNodes.toArray(new Node[forestNodes.size()]);
         return new DefaultForest<>(nodes, roots);
     }
+
+    @SuppressWarnings("unchecked")
+
+    public static <F, C> Tree<F, C> createTreeFromNodes(List<Node<F, C>> nodes) {
+        return new Tree<>(nodes.toArray(new Node[nodes.size()]));
+    }
 }

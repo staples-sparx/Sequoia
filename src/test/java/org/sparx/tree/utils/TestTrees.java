@@ -2,6 +2,7 @@ package org.sparx.tree.utils;
 
 import org.sparx.tree.Condition;
 import org.sparx.tree.Node;
+import org.sparx.tree.Planter;
 import org.sparx.tree.Tree;
 
 import java.util.*;
@@ -55,7 +56,7 @@ public class TestTrees {
             int[] childOffsets = {};
             nodes.add(new Node<Integer, double[]>(-1, random.nextInt(100), true, childOffsets, null));
         }
-        return new Tree<>(nodes);
+        return Planter.createTreeFromNodes(nodes);
     }
 
     public double[] getRandomFeatures() {

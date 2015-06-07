@@ -11,9 +11,8 @@ public class Tree<F, C> {
 
     private final Node<F, C>[] nodes;
 
-    @SuppressWarnings("unchecked")
-    public Tree(List<Node<F, C>> nodes) {
-        this.nodes = nodes.toArray(new Node[nodes.size()]);
+    public Tree(Node<F, C>[] nodes) {
+        this.nodes = nodes;
     }
 
 
@@ -29,7 +28,7 @@ public class Tree<F, C> {
         List<Node<F, C>> subTreeNodes = new ArrayList<>();
 
         TreeReducer.reduceTree(0, nodes, features, missingFeatures, subTreeNodes);
-        return new Tree<>(subTreeNodes);
+        return Planter.createTreeFromNodes(subTreeNodes);
     }
 
     public Node<F, C>[] getNodes() {

@@ -2,8 +2,6 @@ package org.sparx.tree.utils;
 
 import org.sparx.tree.Condition;
 
-import java.util.Map;
-
 /**
  * Created by timbrooks on 5/15/14.
  */

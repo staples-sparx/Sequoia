@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Created by timbrooks on 4/28/15.
  */
-public class DoublesForest implements Forest<Integer, double[]> {
+public class DoubleForest implements Forest<Integer, double[]> {
 
     private final int maxChildren;
     private final int[] features;
@@ -14,10 +14,10 @@ public class DoublesForest implements Forest<Integer, double[]> {
     private final boolean[] leafIndicators;
     private final int[] offsets;
     private final int[] roots;
-    private final DoublesCondition condition;
+    private final DoubleCondition condition;
 
-    public DoublesForest(int maxChildren, int[] features, double[] values, boolean[] leafIndicators, int[] offsets, int[] roots,
-                         DoublesCondition condition) {
+    public DoubleForest(int maxChildren, int[] features, double[] values, boolean[] leafIndicators, int[] offsets, int[] roots,
+                        DoubleCondition condition) {
         this.maxChildren = maxChildren;
         this.features = features;
         this.values = values;
@@ -55,7 +55,7 @@ public class DoublesForest implements Forest<Integer, double[]> {
         throw new UnsupportedOperationException("Not allowed");
     }
 
-    public static <C> DoublesForest createFromForest(Forest<Integer, C> forest) {
+    public static <C> DoubleForest createFromForest(Forest<Integer, C> forest) {
         int maxChildren = 0;
 
         Node<Integer, C>[] nodes = forest.getNodes();
@@ -82,7 +82,7 @@ public class DoublesForest implements Forest<Integer, double[]> {
             }
             ++i;
         }
-        return new DoublesForest(maxChildren, features, values, leafIndicators, offsets, roots, new DoublesCondition());
+        return new DoubleForest(maxChildren, features, values, leafIndicators, offsets, roots, new DoubleCondition());
     }
 
     private double traverseSingleTree(int root, double[] features) {

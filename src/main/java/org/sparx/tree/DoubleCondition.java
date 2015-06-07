@@ -3,7 +3,7 @@ package org.sparx.tree;
 /**
  * Created by timbrooks on 4/28/15.
  */
-public class DoublesCondition {
+public class DoubleCondition {
 
     public int childOffset(double cutPoint, int feature, double[] features) {
         double value = features[feature];

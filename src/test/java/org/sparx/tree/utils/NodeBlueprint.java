@@ -1,6 +1,6 @@
 package org.sparx.tree.utils;
 
-import org.sparx.tree.ICondition;
+import org.sparx.tree.Condition;
 
 import java.util.Map;
 
@@ -10,9 +10,9 @@ import java.util.Map;
 public class NodeBlueprint {
 
     private final TestFeature feature;
-    private final ICondition<TestFeature, Map<TestFeature, Integer>> condition;
+    private final Condition<TestFeature, Map<TestFeature, Integer>> condition;
 
-    public NodeBlueprint(TestFeature feature, ICondition<TestFeature, Map<TestFeature, Integer>> condition) {
+    public NodeBlueprint(TestFeature feature, Condition<TestFeature, Map<TestFeature, Integer>> condition) {
         this.feature = feature;
         this.condition = condition;
     }
@@ -21,7 +21,7 @@ public class NodeBlueprint {
         return feature;
     }
 
-    public ICondition<TestFeature, Map<TestFeature, Integer>> getCondition() {
+    public Condition<TestFeature, Map<TestFeature, Integer>> getCondition() {
         return condition;
     }
 }

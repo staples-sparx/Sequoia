@@ -148,7 +148,7 @@ public class TreeTest {
         DAY_OF_WEEK
     }
 
-    private static class Categorical implements ICondition<Feature, Map<Feature, Integer>> {
+    private static class Categorical implements Condition<Feature, Map<Feature, Integer>> {
 
         private final Map<Integer, Integer> conditions;
 
@@ -166,7 +166,7 @@ public class TreeTest {
         }
     }
 
-    private static class Numeric implements ICondition<Feature, Map<Feature, Integer>> {
+    private static class Numeric implements Condition<Feature, Map<Feature, Integer>> {
 
         private final int cutPoint;
 

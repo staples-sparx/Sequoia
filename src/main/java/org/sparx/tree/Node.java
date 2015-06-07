@@ -9,10 +9,10 @@ public class Node<F, C> {
         public final double value;
         public final boolean isLeaf;
         public final int[] childOffsets;
-        private final ICondition<F, C> condition;
+        private final Condition<F, C> condition;
         private int currentChildIndex;
 
-        public Node(F feature, double value, boolean isLeaf, int[] childOffsets, ICondition<F, C> condition) {
+        public Node(F feature, double value, boolean isLeaf, int[] childOffsets, Condition<F, C> condition) {
             this.feature = feature;
             this.value = value;
             this.isLeaf = isLeaf;

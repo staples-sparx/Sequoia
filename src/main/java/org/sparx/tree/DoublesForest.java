@@ -6,17 +6,19 @@ import java.util.Set;
 /**
  * Created by timbrooks on 4/28/15.
  */
-public class Forest1 implements Forest<Integer, double[]> {
+public class DoublesForest implements Forest<Integer, double[]> {
 
+    private final int maxChildren;
     private final int[] features;
     private final double[] values;
     private final boolean[] leafIndicators;
     private final int[] offsets;
     private final int[] roots;
-    private final SpecializedCondition condition;
+    private final DoublesCondition condition;
 
-    public Forest1(int[] features, double[] values, boolean[] leafIndicators, int[] offsets, int[] roots,
-                   SpecializedCondition condition) {
+    public DoublesForest(int maxChildren, int[] features, double[] values, boolean[] leafIndicators, int[] offsets, int[] roots,
+                         DoublesCondition condition) {
+        this.maxChildren = maxChildren;
         this.features = features;
         this.values = values;
         this.leafIndicators = leafIndicators;
@@ -53,10 +55,14 @@ public class Forest1 implements Forest<Integer, double[]> {
         throw new UnsupportedOperationException("Not allowed");
     }
 
-    public static <C> Forest1 createFromForest(Forest<Integer, C> forest) {
-        int maxChildren = 2;
+    public static <C> DoublesForest createFromForest(Forest<Integer, C> forest) {
+        int maxChildren = 0;
 
         Node<Integer, C>[] nodes = forest.getNodes();
+
+        for (Node<Integer, C> node : nodes) {
+            maxChildren = Math.max(maxChildren, node.childOffsets.length);
+        }
 
         int[] features = new int[nodes.length];
         double[] values = new double[nodes.length];
@@ -76,7 +82,7 @@ public class Forest1 implements Forest<Integer, double[]> {
             }
             ++i;
         }
-        return new Forest1(features, values, leafIndicators, offsets, roots, new SpecializedCondition());
+        return new DoublesForest(maxChildren, features, values, leafIndicators, offsets, roots, new DoublesCondition());
     }
 
     private double traverseSingleTree(int root, double[] features) {
@@ -84,7 +90,7 @@ public class Forest1 implements Forest<Integer, double[]> {
         while (!leafIndicators[node]) {
             double cutPoint = values[node];
             int childOffset = condition.childOffset(cutPoint, this.features[node], features);
-            int offset = (childOffset == 0) ? offsets[node * 2] : offsets[node * 2 + 1];
+            int offset = offsets[node * maxChildren + childOffset];
             node = root + offset;
         }
         return values[node];

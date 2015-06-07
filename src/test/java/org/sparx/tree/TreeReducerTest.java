@@ -50,7 +50,7 @@ public class TreeReducerTest {
         MISSING
     }
 
-    private class DummyCondition implements ICondition<Feature, Map<Feature, Integer>> {
+    private class DummyCondition implements Condition<Feature, Map<Feature, Integer>> {
 
         @Override
         public int nextOffsetIndex(final Feature feature, final Map<Feature, Integer> features) {

@@ -1,6 +1,6 @@
 package org.sparx.tree.utils;
 
-import org.sparx.tree.ICondition;
+import org.sparx.tree.Condition;
 import org.sparx.tree.Node;
 import org.sparx.tree.Tree;
 
@@ -76,7 +76,7 @@ public class TestTrees {
         return featureMap;
     }
 
-    private static class Categorical implements ICondition<TestFeature, Map<TestFeature, Integer>> {
+    private static class Categorical implements Condition<TestFeature, Map<TestFeature, Integer>> {
 
         private final Map<Integer, Integer> conditions;
 
@@ -94,7 +94,7 @@ public class TestTrees {
         }
     }
 
-    private static class Numeric implements ICondition<TestFeature, Map<TestFeature, Integer>> {
+    private static class Numeric implements Condition<TestFeature, Map<TestFeature, Integer>> {
 
         private final int cutPoint;
 

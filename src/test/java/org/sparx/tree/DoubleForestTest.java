@@ -35,7 +35,7 @@ public class DoubleForestTest {
         }
 
         Forest<Integer, double[]> forest = Planter.createForestFromTrees(trees);
-        DoubleForest doubleForest = DoubleForest.createFromForest(forest, new DoubleCondition() {
+        DoubleCondition<double[]> condition = new DoubleCondition<double[]>() {
             @Override
             public int childOffset(double cutPoint, int feature, double[] features) {
                 double value = features[feature];
@@ -47,7 +47,8 @@ public class DoubleForestTest {
                     return 2;
                 }
             }
-        });
+        };
+        DoubleForest<double[]> doubleForest = DoubleForest.createFromForest(forest, condition);
 
         int counter = 0;
         for (double d : doubleForest.scoreTrees(features)) {

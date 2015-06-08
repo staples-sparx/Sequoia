@@ -7,21 +7,21 @@ import java.util.Arrays;
  */
 public class Node<F, C> {
 
-        public final F feature;
-        public final double value;
-        public final boolean isLeaf;
-        public final int[] childOffsets;
-        private final Condition<F, C> condition;
-        private int currentChildIndex;
+    public final F feature;
+    public final double value;
+    public final boolean isLeaf;
+    public final int[] childOffsets;
+    private final Condition<F, C> condition;
+    private int currentChildIndex;
 
-        public Node(F feature, double value, boolean isLeaf, int[] childOffsets, Condition<F, C> condition) {
-            this.feature = feature;
-            this.value = value;
-            this.isLeaf = isLeaf;
-            this.childOffsets = childOffsets;
-            this.condition = condition;
-            this.currentChildIndex = 0;
-        }
+    public Node(F feature, double value, boolean isLeaf, int[] childOffsets, Condition<F, C> condition) {
+        this.feature = feature;
+        this.value = value;
+        this.isLeaf = isLeaf;
+        this.childOffsets = childOffsets;
+        this.condition = condition;
+        this.currentChildIndex = 0;
+    }
 
     public int nextNodeOffset(C features) {
         return childOffsets[condition.nextOffsetIndex(feature, features)];

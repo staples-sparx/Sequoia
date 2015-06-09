@@ -1,4 +1,4 @@
-DecisionTree
+Sequoia
 ============
 
-A generic decision tree for data science models.
+A generic decision tree library for data science models.

@@ -1,4 +1,4 @@
-package org.sparx.tree;
+package org.sparx.sequoia;
 
 import java.util.ArrayList;
 import java.util.List;

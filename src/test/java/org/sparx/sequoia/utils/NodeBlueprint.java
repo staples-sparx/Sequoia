@@ -1,6 +1,6 @@
-package org.sparx.tree.utils;
+package org.sparx.sequoia.utils;
 
-import org.sparx.tree.Condition;
+import org.sparx.sequoia.Condition;
 
 /**
  * Created by timbrooks on 5/15/14.

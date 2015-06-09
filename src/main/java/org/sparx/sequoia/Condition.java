@@ -1,4 +1,4 @@
-package org.sparx.tree;
+package org.sparx.sequoia;
 
 /**
  * Created by timbrooks on 5/14/14.

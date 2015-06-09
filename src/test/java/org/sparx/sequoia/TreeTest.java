@@ -1,4 +1,4 @@
-package org.sparx.tree;
+package org.sparx.sequoia;
 
 import org.junit.Before;
 import org.junit.Test;

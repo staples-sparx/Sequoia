@@ -1,9 +1,9 @@
-package org.sparx.tree.utils;
+package org.sparx.sequoia.utils;
 
-import org.sparx.tree.Condition;
-import org.sparx.tree.Node;
-import org.sparx.tree.Planter;
-import org.sparx.tree.Tree;
+import org.sparx.sequoia.Condition;
+import org.sparx.sequoia.Node;
+import org.sparx.sequoia.Planter;
+import org.sparx.sequoia.Tree;
 
 import java.util.*;
 

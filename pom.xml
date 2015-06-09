@@ -6,7 +6,7 @@
 
     <groupId>org.sparx</groupId>
     <artifactId>sequoia</artifactId>
-    <version>0.15</version>
+    <version>0.20</version>
 
     <dependencies>
         <dependency>

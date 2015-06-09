@@ -1,5 +1,6 @@
 package org.sparx.sequoia;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -49,6 +50,18 @@ public class DoubleForest<C> implements Forest<Integer, C> {
         throw new UnsupportedOperationException("Not allowed");
     }
 
+    /**
+     * Construct a {@link DoubleForest} from a valid {@link Forest}.
+     *
+     * A valid forest must use features represented as {@link Integer} objects. Additionally, the value of branch
+     * nodes will be the argument (most likely cutpoint) passed to the condition function. The
+     * {@link DefaultDoubleCondition} is a good numeric condition that supports two children. If your nodes have
+     * more that two children, you will need to provide your own {@link DoubleCondition}.
+     *
+     * @param forest {@link Forest} that will be used to construct double forest.
+     * @param condition {@link DoubleCondition} condition that will be used to decide which child to visit next.
+     * @return a double forest
+     */
     public static <C> DoubleForest<C> createFromForest(Forest<Integer, C> forest, DoubleCondition<C> condition) {
         int maxChildren = 0;
 

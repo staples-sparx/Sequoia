@@ -9,6 +9,12 @@ import java.util.List;
  */
 public final class Planter {
 
+    /**
+     * Construct a {@link DefaultForest} from the list of {@link Tree} objects.
+     *
+     * @param trees {@link List<Tree>} trees that will compose the forest.
+     * @return a forest
+     */
     @SuppressWarnings("unchecked")
     public static <F, C> Forest<F, C> createForestFromTrees(List<Tree<F, C>> trees) {
         final int[] roots = new int[trees.size()];
@@ -27,8 +33,13 @@ public final class Planter {
         return new DefaultForest<>(nodes, roots);
     }
 
+    /**
+     * Construct a {@link Tree} from the list of {@link Node} objects.
+     *
+     * @param nodes {@link List<Node>} nodes that will compose the tree.
+     * @return a tree
+     */
     @SuppressWarnings("unchecked")
-
     public static <F, C> Tree<F, C> createTreeFromNodes(List<Node<F, C>> nodes) {
         return new Tree<>(nodes.toArray(new Node[nodes.size()]));
     }

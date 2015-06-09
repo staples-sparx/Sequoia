@@ -14,6 +14,16 @@ public class Node<F, C> {
     private final Condition<F, C> condition;
     private int currentChildIndex;
 
+    /**
+     * Constructs an Node with the provided values.
+     *
+     * @param  feature the initial capacity of the list
+     * @param  value  the initial capacity of the list
+     * @param  isLeaf boolean flag indicating if node is a leaf
+     * @param  childOffsets offsets from the tree root of the children nodes
+     * @param  condition {@link Condition} condition that when evaluated will return the index of the child offset to
+     *                                    visit next
+     */
     public Node(F feature, double value, boolean isLeaf, int[] childOffsets, Condition<F, C> condition) {
         this.feature = feature;
         this.value = value;
@@ -25,11 +35,6 @@ public class Node<F, C> {
 
     public int nextNodeOffset(C features) {
         return childOffsets[condition.nextOffsetIndex(feature, features)];
-    }
-
-    public int nextNodeOffset(final C features, final int[] fastPathOffsets) {
-        int index = condition.nextOffsetIndex(feature, features);
-        return childOffsets[index] + fastPathOffsets[index];
     }
 
     public Node<F, C> copyWithEmptyChildOffsets() {

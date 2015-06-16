@@ -62,6 +62,7 @@ public class DoubleForest<C> implements Forest<Integer, C> {
      * @param condition {@link DoubleCondition} condition that will be used to decide which child to visit next.
      * @return a double forest
      */
+    @SuppressWarnings("unchecked")
     public static <C> DoubleForest<C> createFromForest(Forest<Integer, C> forest, DoubleCondition<C> condition) {
         int maxChildren = 0;
 

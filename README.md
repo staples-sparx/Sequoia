@@ -16,4 +16,16 @@ Note: at some point in the near future Sequoia will be added to Maven.
 
 This library is pre-Alpha. API is subject to change.
 
+Nodes should be created calling the constructor directly.
+
+```java
+public Node(F feature, double value, boolean isLeaf, int[] childOffsets, Condition<F, C> condition)
+```
+
 Trees and Forests can be created using the Planter class.
+
+```java
+public static <F, C> Tree<F, C> createTreeFromNodes(List<Node<F, C>> nodes)
+
+public static <F, C> Forest<F, C> createForestFromTrees(List<Tree<F, C>> trees)
+```

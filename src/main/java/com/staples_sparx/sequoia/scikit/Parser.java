@@ -1,6 +1,5 @@
 package com.staples_sparx.sequoia.scikit;
 
-import com.staples_sparx.sequoia.Forest;
 import com.staples_sparx.sequoia.Node;
 import com.staples_sparx.sequoia.Planter;
 import com.staples_sparx.sequoia.Tree;
@@ -19,19 +18,18 @@ import java.util.List;
  */
 public class Parser {
 
-    private Int2ObjectMap<String> featureIndexMap;
-
-
-    public Forest<Integer, double[]> parseForestFromStream(InputStream inputStream) throws IOException {
+    public ScikitGBM parseForestFromStream(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         ignoreHeader(reader);
+        double initValue = parseInitialValue(reader);
+        double learningRate = parseLearningRate(reader);
         String[] features = parseFeatures(reader);
-        featureIndexMap = buildFeatureIndexMap(features);
+        Int2ObjectMap<String> featureIndexMap = buildFeatureIndexMap(features);
         List<Tree<Integer, double[]>> trees = parseTrees(reader);
 
 
-        return Planter.createForestFromTrees(trees);
+        return new ScikitGBM(Planter.createForestFromTrees(trees), featureIndexMap, initValue, learningRate);
     }
 
     private List<Tree<Integer, double[]>> parseTrees(BufferedReader reader) throws IOException {
@@ -117,6 +115,14 @@ public class Parser {
 
     private void ignoreHeader(BufferedReader reader) throws IOException {
         reader.readLine();
+    }
+
+    private double parseInitialValue(BufferedReader reader) throws IOException {
+        return Double.parseDouble(readKeyVal(reader.readLine()));
+    }
+
+    private double parseLearningRate(final BufferedReader reader) throws IOException {
+        return Double.parseDouble(readKeyVal(reader.readLine()));
     }
 
     private String readKeyVal(String line) {

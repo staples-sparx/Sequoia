@@ -13,8 +13,8 @@ public class ScikitGBM {
     public final double initialValue;
     public final Int2ObjectMap<String> featureIndexMap;
 
-    public ScikitGBM(Forest<Integer, double[]> forest, Int2ObjectMap<String> featureIndexMap, double learningRate,
-                     double initialValue) {
+    public ScikitGBM(Forest<Integer, double[]> forest, Int2ObjectMap<String> featureIndexMap, double initialValue,
+                     double learningRate) {
         this.forest = forest;
         this.featureIndexMap = featureIndexMap;
         this.learningRate = learningRate;

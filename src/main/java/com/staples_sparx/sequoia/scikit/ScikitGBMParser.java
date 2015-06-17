@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by timbrooks on 6/16/15.
  */
-public class Parser {
+public class ScikitGBMParser {
 
     public static ScikitGBM parseForestFromStream(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

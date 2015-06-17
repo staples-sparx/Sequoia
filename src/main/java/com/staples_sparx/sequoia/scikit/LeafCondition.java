@@ -1,4 +1,6 @@
-package org.sparx.sequoia;
+package com.staples_sparx.sequoia.scikit;
+
+import com.staples_sparx.sequoia.Condition;
 
 /**
  * Created by timbrooks on 5/4/14.

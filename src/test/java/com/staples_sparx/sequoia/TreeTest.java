@@ -1,4 +1,4 @@
-package org.sparx.sequoia;
+package com.staples_sparx.sequoia;
 
 import org.junit.Before;
 import org.junit.Test;

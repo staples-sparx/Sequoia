@@ -1,5 +1,9 @@
-package org.sparx.sequoia;
+package com.staples_sparx.sequoia.scikit;
 
+import com.staples_sparx.sequoia.Forest;
+import com.staples_sparx.sequoia.Node;
+import com.staples_sparx.sequoia.Planter;
+import com.staples_sparx.sequoia.Tree;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
@@ -13,20 +17,16 @@ import java.util.List;
 /**
  * Created by timbrooks on 6/16/15.
  */
-public class Parser<F, C> {
+public class Parser {
 
-    private final FeatureParser<F> featureParser;
-    private Int2ObjectMap<F> featureIndexMap;
+    private Int2ObjectMap<String> featureIndexMap;
 
-    public Parser(FeatureParser<F> featureParser) {
-        this.featureParser = featureParser;
-    }
 
     public Forest<Integer, double[]> parseForestFromStream(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         ignoreHeader(reader);
-        F[] features = featureParser.parseFeatures(reader);
+        String[] features = parseFeatures(reader);
         featureIndexMap = buildFeatureIndexMap(features);
         List<Tree<Integer, double[]>> trees = parseTrees(reader);
 
@@ -58,12 +58,20 @@ public class Parser<F, C> {
         return trees;
     }
 
-    private Int2ObjectMap<F> buildFeatureIndexMap(F[] featuresFromModelFile) {
-        Int2ObjectMap<F> result = new Int2ObjectOpenHashMap<>(featuresFromModelFile.length);
+    private Int2ObjectMap<String> buildFeatureIndexMap(String[] featuresFromModelFile) {
+        Int2ObjectMap<String> result = new Int2ObjectOpenHashMap<>(featuresFromModelFile.length);
         for (int i = 0; i < featuresFromModelFile.length; i++) {
             result.put(i, featuresFromModelFile[i]);
         }
         return result;
+    }
+
+    private String[] parseFeatures(final BufferedReader reader) throws IOException {
+        String[] featureNameTokens = readKeyVal(reader.readLine()).split(",");
+        if (featureNameTokens.length == 0) {
+            throw new RuntimeException("features from model file can't be empty");
+        }
+        return featureNameTokens;
     }
 
 

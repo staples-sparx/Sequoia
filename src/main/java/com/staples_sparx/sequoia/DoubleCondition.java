@@ -1,4 +1,4 @@
-package org.sparx.sequoia;
+package com.staples_sparx.sequoia;
 
 /**
  * Created by timbrooks on 6/7/15.

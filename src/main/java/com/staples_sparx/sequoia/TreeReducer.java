@@ -1,4 +1,4 @@
-package org.sparx.sequoia;
+package com.staples_sparx.sequoia;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntStack;

@@ -1,9 +1,9 @@
-package org.sparx.sequoia.utils;
+package com.staples_sparx.sequoia.utils;
 
-import org.sparx.sequoia.Condition;
-import org.sparx.sequoia.Node;
-import org.sparx.sequoia.Planter;
-import org.sparx.sequoia.Tree;
+import com.staples_sparx.sequoia.Condition;
+import com.staples_sparx.sequoia.Node;
+import com.staples_sparx.sequoia.Planter;
+import com.staples_sparx.sequoia.Tree;
 
 import java.util.*;
 

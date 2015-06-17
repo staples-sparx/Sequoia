@@ -1,8 +1,8 @@
-package org.sparx.sequoia;
+package com.staples_sparx.sequoia;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.sparx.sequoia.utils.TestTrees;
+import com.staples_sparx.sequoia.utils.TestTrees;
 
 import java.util.ArrayList;
 import java.util.HashSet;

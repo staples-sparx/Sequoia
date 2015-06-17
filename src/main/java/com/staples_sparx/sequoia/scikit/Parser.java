@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class Parser {
 
-    public ScikitGBM parseForestFromStream(InputStream inputStream) throws IOException {
+    public static ScikitGBM parseForestFromStream(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         ignoreHeader(reader);
@@ -32,7 +32,35 @@ public class Parser {
         return new ScikitGBM(Planter.createForestFromTrees(trees), featureIndexMap, initValue, learningRate);
     }
 
-    private List<Tree<Integer, double[]>> parseTrees(BufferedReader reader) throws IOException {
+    private static void ignoreHeader(BufferedReader reader) throws IOException {
+        reader.readLine();
+    }
+
+    private static double parseInitialValue(BufferedReader reader) throws IOException {
+        return Double.parseDouble(readKeyVal(reader.readLine()));
+    }
+
+    private static double parseLearningRate(final BufferedReader reader) throws IOException {
+        return Double.parseDouble(readKeyVal(reader.readLine()));
+    }
+
+    private static String[] parseFeatures(final BufferedReader reader) throws IOException {
+        String[] featureNameTokens = readKeyVal(reader.readLine()).split(",");
+        if (featureNameTokens.length == 0) {
+            throw new RuntimeException("features from model file can't be empty");
+        }
+        return featureNameTokens;
+    }
+
+    private static Int2ObjectMap<String> buildFeatureIndexMap(String[] featuresFromModelFile) {
+        Int2ObjectMap<String> result = new Int2ObjectOpenHashMap<>(featuresFromModelFile.length);
+        for (int i = 0; i < featuresFromModelFile.length; i++) {
+            result.put(i, featuresFromModelFile[i]);
+        }
+        return result;
+    }
+
+    private static List<Tree<Integer, double[]>> parseTrees(BufferedReader reader) throws IOException {
         int numberOfTrees = readNumberOfElements(reader.readLine());
         if (numberOfTrees <= 0) {
             throw new RuntimeException("numTrees has to be > 0");
@@ -56,24 +84,16 @@ public class Parser {
         return trees;
     }
 
-    private Int2ObjectMap<String> buildFeatureIndexMap(String[] featuresFromModelFile) {
-        Int2ObjectMap<String> result = new Int2ObjectOpenHashMap<>(featuresFromModelFile.length);
-        for (int i = 0; i < featuresFromModelFile.length; i++) {
-            result.put(i, featuresFromModelFile[i]);
+    private static int readNumberOfNodes(String line) {
+        if (!"tree [0-9]+".matches(line)) {
+            throw new RuntimeException("Tree does not match pattern");
         }
-        return result;
-    }
-
-    private String[] parseFeatures(final BufferedReader reader) throws IOException {
-        String[] featureNameTokens = readKeyVal(reader.readLine()).split(",");
-        if (featureNameTokens.length == 0) {
-            throw new RuntimeException("features from model file can't be empty");
-        }
-        return featureNameTokens;
+        String[] tokens = line.split(" ");
+        return Integer.parseInt(tokens[1].trim());
     }
 
 
-    private Node<Integer, double[]> parseNode(final BufferedReader reader) throws IOException {
+    private static Node<Integer, double[]> parseNode(final BufferedReader reader) throws IOException {
         String[] nodeDataTokens = parseNodeData(reader.readLine());
         int featureIndex = Integer.parseInt(nodeDataTokens[0]);
         double cutPoint = Double.parseDouble(nodeDataTokens[1]);
@@ -89,7 +109,7 @@ public class Parser {
         }
     }
 
-    private String[] parseNodeData(String line) {
+    private static String[] parseNodeData(String line) {
         String[] nodeData = line.split(",");
 
         if (nodeData.length != 6) {
@@ -101,31 +121,11 @@ public class Parser {
         return nodeData;
     }
 
-    private static int readNumberOfNodes(String line) {
-        if (!"tree [0-9]+".matches(line)) {
-            throw new RuntimeException("Tree does not match pattern");
-        }
-        String[] tokens = line.split(" ");
-        return Integer.parseInt(tokens[1].trim());
-    }
-
-    private int readNumberOfElements(String line) {
+    private static int readNumberOfElements(String line) {
         return Integer.parseInt(readKeyVal(line));
     }
 
-    private void ignoreHeader(BufferedReader reader) throws IOException {
-        reader.readLine();
-    }
-
-    private double parseInitialValue(BufferedReader reader) throws IOException {
-        return Double.parseDouble(readKeyVal(reader.readLine()));
-    }
-
-    private double parseLearningRate(final BufferedReader reader) throws IOException {
-        return Double.parseDouble(readKeyVal(reader.readLine()));
-    }
-
-    private String readKeyVal(String line) {
+    private static String readKeyVal(String line) {
         String[] tokens = line.split("=", 2);
         if (tokens.length != 2) {
             throw new RuntimeException(String.format(

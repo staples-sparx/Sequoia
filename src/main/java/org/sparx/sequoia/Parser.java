@@ -2,8 +2,6 @@ package org.sparx.sequoia;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +16,6 @@ import java.util.List;
 public class Parser<F, C> {
 
     private final FeatureParser<F> featureParser;
-    private List<IntList> categoricalSplits = new ArrayList<>();
     private Int2ObjectMap<F> featureIndexMap;
 
     public Parser(FeatureParser<F> featureParser) {
@@ -26,13 +23,11 @@ public class Parser<F, C> {
     }
 
     public Forest<Integer, double[]> parseForestFromStream(InputStream inputStream) throws IOException {
-        InputStreamReader intputStream = new InputStreamReader(inputStream);
-        BufferedReader reader = new BufferedReader(intputStream);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         ignoreHeader(reader);
         F[] features = featureParser.parseFeatures(reader);
         featureIndexMap = buildFeatureIndexMap(features);
-        categoricalSplits = parseCategoricalLists(reader);
         List<Tree<Integer, double[]>> trees = parseTrees(reader);
 
 
@@ -108,34 +103,12 @@ public class Parser<F, C> {
         return Integer.parseInt(tokens[1].trim());
     }
 
-    private List<IntList> parseCategoricalLists(BufferedReader reader) throws IOException {
-        int numCategoricalLists = readNumberOfElements(reader.readLine());
-        List<IntList> categoricalSplits = new ArrayList<>(numCategoricalLists);
-        for (int i = 0; i < numCategoricalLists; i++) {
-            categoricalSplits.add(categoricalSplitListFromLine(reader.readLine()));
-        }
-
-        return categoricalSplits;
-    }
-
     private int readNumberOfElements(String line) {
         return Integer.parseInt(readKeyVal(line));
     }
 
     private void ignoreHeader(BufferedReader reader) throws IOException {
         reader.readLine();
-    }
-
-    private IntList categoricalSplitListFromLine(String line) {
-        String[] categoricalIndexTokens = line.split(",");
-        if (categoricalIndexTokens.length <= 0) {
-            throw new RuntimeException("expected non-empty cat split indexes");
-        }
-        IntList result = new IntArrayList(categoricalIndexTokens.length);
-        for (String categoricalIndexToken : categoricalIndexTokens) {
-            result.add(Integer.parseInt(categoricalIndexToken.trim()));
-        }
-        return result;
     }
 
     private String readKeyVal(String line) {

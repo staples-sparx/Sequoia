@@ -63,7 +63,7 @@ public class ScikitGBMParser {
     private static List<Tree<Integer, double[]>> parseTrees(BufferedReader reader) throws IOException {
         int numberOfTrees = readNumberOfElements(reader.readLine());
         if (numberOfTrees <= 0) {
-            throw new RuntimeException("numTrees has to be > 0");
+            throw new ScikitGBMParsingException("numberOfTrees has to be > 0");
         }
         List<Tree<Integer, double[]>> trees = new ArrayList<>();
         for (int i = 0; i < numberOfTrees; i++) {
@@ -77,7 +77,7 @@ public class ScikitGBMParser {
             if (numNodes != nodes.size()) {
                 String message = String.format("Number of nodes does not match expected: [expected: %s, actual: %s].",
                         numNodes, nodes.size());
-                throw new RuntimeException(message);
+                throw new ScikitGBMParsingException(message);
             }
             trees.add(Planter.createTreeFromNodes(nodes));
         }
@@ -86,7 +86,7 @@ public class ScikitGBMParser {
 
     private static int readNumberOfNodes(String line) {
         if (!"tree [0-9]+".matches(line)) {
-            throw new RuntimeException("Tree does not match pattern");
+            throw new ScikitGBMParsingException("Tree does not match pattern");
         }
         String[] tokens = line.split(" ");
         return Integer.parseInt(tokens[1].trim());
@@ -113,7 +113,7 @@ public class ScikitGBMParser {
         String[] nodeData = line.split(",");
 
         if (nodeData.length != 6) {
-            throw new RuntimeException("expected 6 fields to specify a node");
+            throw new ScikitGBMParsingException("expected 6 fields to specify a node");
         }
         for (int i = 0; i < nodeData.length; i++) {
             nodeData[i] = nodeData[i].trim();
@@ -128,8 +128,7 @@ public class ScikitGBMParser {
     private static String readKeyVal(String line) {
         String[] tokens = line.split("=", 2);
         if (tokens.length != 2) {
-            throw new RuntimeException(String.format(
-                    "expected line in \"key = val\", got %s", line));
+            throw new ScikitGBMParsingException(String.format("expected line in \"key = val\", got %s", line));
         }
         return tokens[1].trim();
     }

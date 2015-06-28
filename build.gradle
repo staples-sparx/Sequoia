@@ -20,7 +20,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.staples-sparx'
-version = '0.20.2_SNAPSHOT'
+version = '0.20.3_SNAPSHOT'
 
 
 def isReleaseBuild

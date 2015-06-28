@@ -26,7 +26,7 @@ public final class Planter {
     /**
      * Construct a {@link DefaultForest} from the list of {@link Tree} objects.
      *
-     * @param trees {@link List<Tree>} trees that will compose the forest.
+     * @param trees {@code {@link List}<{@link Tree}>} trees that will compose the forest.
      * @return a forest
      */
     @SuppressWarnings("unchecked")
@@ -50,7 +50,7 @@ public final class Planter {
     /**
      * Construct a {@link Tree} from the list of {@link Node} objects.
      *
-     * @param nodes {@link List<Node>} nodes that will compose the tree.
+     * @param nodes {@code {@link List}<{@link Node}>} nodes that will compose the tree.
      * @return a tree
      */
     @SuppressWarnings("unchecked")

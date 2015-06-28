@@ -1,0 +1,131 @@
+/*
+ * Copyright 2014 Staples Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'com.staples_sparx'
+version = '0.20.1-SNAPSHOT'
+
+
+def isReleaseBuild
+
+def sonatypeRepositoryUrl
+
+if (!version.endsWith("SNAPSHOT")) {
+    isReleaseBuild = true
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+} else {
+    isReleaseBuild = false
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+}
+
+ext {
+    if (!project.hasProperty('ossrhUsername'))
+        ossrhUsername = ''
+
+    if (!project.hasProperty('ossrhPassword'))
+        ossrhPassword = ''
+}
+
+compileJava {
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'it.unimi.dsi:fastutil:7.0.2'
+    testCompile 'junit:junit:4.12'
+}
+
+javadoc {
+    title = '<h1>Sequoia</h1>'
+
+    options.bottom = '<i>Copyright &#169; 2014 Staples Inc. All Rights Reserved.</i>'
+    options.addStringOption('XDignore.symbol.file', '-quiet')
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from tasks.javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            if (isReleaseBuild) {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            }
+
+            repository(url: sonatypeRepositoryUrl) {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name = 'Sequoia'
+                packaging = 'jar'
+                description = 'Sequoia is Java library for scoring and evaluating decision trees.'
+                url = 'https://github.com/staples-sparx/Sequoia'
+
+                scm {
+                    url = 'https://github.com/staples-sparx/Sequoia'
+                    connection = 'scm:git@github.com:staples-sparx/Sequoia.git'
+                    developerConnection = 'scm:git@github.com:staples-sparx/Sequoia.git'
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'tbrooks8'
+                        name = 'Tim Brooks'
+                        email = 'tim.brooks@staples.com'
+                        url = 'https://github.com/tbrooks8'
+                    }
+                }
+            }
+        }
+    }
+}

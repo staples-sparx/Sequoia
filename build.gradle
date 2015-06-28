@@ -19,7 +19,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-group = 'com.staples_sparx'
+group = 'com.staples-sparx'
 version = '0.20.2_SNAPSHOT'
 
 
@@ -29,10 +29,10 @@ def sonatypeRepositoryUrl
 
 if (!version.endsWith("SNAPSHOT")) {
     isReleaseBuild = true
-    sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 } else {
     isReleaseBuild = false
-    sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots"
 }
 
 ext {

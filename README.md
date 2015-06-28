@@ -4,13 +4,8 @@ An efficient Java decision tree library.
 
 ## Getting Started
 
-Clone the repository and building the project using mvn package.
-
-Place the jar in your project.
-
-Sequoia depends on it.unimi.dsi.fastutil version 7.0.2.
-
-Note: at some point in the near future Sequoia will be added to Maven.
+To require the current release version in Gradle, add the following to the dependencies section of your build file:
+> compile 'com.staples-sparx:Sequoia:0.20.2'
 
 ## Usage
 
